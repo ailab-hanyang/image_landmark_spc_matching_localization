@@ -1,10 +1,10 @@
 /*
- @copyright Automotive Intelligence Lab, Konkuk University
- @author kimchuorok@gmail.com, pauljiwon96@gmail.com, yondoo20@gmail.com 
- @file visualization.cpp
- @Image Landmark and Semantic Point Cloud Map Matching Localization
- @version 1.0
- @date 2021-03-25
+ * @copyright Automotive Intelligence Lab, Konkuk University
+ * @author kimchuorok@gmail.com, pauljiwon96@gmail.com, yondoo20@gmail.com 
+ * @file visualization.cpp
+ * @brief Image Landmark and Semantic Point Cloud Map Matching Localization
+ * @version 1.0
+ * @date 2021-03-25
  */
 
 #include "visualization.hpp"

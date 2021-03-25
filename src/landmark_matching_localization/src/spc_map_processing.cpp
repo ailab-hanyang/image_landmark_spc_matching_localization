@@ -1,10 +1,10 @@
 /*
- @copyright Automotive Intelligence Lab, Konkuk University
- @author pauljiwon96@gmail.com, kimchuorok@gmail.com, yondoo20@gmail.com 
- @file spc_map_processing.cpp
- @Image Landmark and Semantic Point Cloud Map Matching Localization
- @version 1.0
- @date 2021-03-25 
+ * @copyright Automotive Intelligence Lab, Konkuk University
+ * @author pauljiwon96@gmail.com, kimchuorok@gmail.com, yondoo20@gmail.com 
+ * @file spc_map_processing.cpp
+ * @brief Image Landmark and Semantic Point Cloud Map Matching Localization
+ * @version 1.0
+ * @date 2021-03-25
  */
 
 #include "spc_map_processing.hpp"
@@ -12,11 +12,16 @@
 SPCMapProcessing::SPCMapProcessing()
 :pcptr_point_cloud_intensity_(new pcl::PointCloud<pcl::PointXYZI>), pcptr_point_cloud_rgb_(new pcl::PointCloud<pcl::PointXYZRGB>), d_height_m_(0.)
 {
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] Initialization start"<<std::endl;
+    }
     if(m_rosNodeHandler.getParam("/spc_map_processing/param_str_pcd_file_path_", param_str_pcd_file_path_)){
         ROS_INFO("GET param_str_pcd_file_path_");
     }
     m_rosNodeHandler.getParam("/spc_map_processing/param_d_roi_x_boundary_length_m_", param_d_roi_x_boundary_length_m_);
     m_rosNodeHandler.getParam("/spc_map_processing/param_d_roi_y_boundary_length_m_", param_d_roi_y_boundary_length_m_);
+    m_rosNodeHandler.getParam("/spc_map_processing/param_DEBUG_MODE_", param_DEBUG_MODE_);
     m_rosNodeHandler.getParam("/spc_map_processing/param_height_detection_type_minimum_", param_height_detection_type_minimum_);
 
     int i_buffer_size = 10;
@@ -45,6 +50,12 @@ SPCMapProcessing::SPCMapProcessing()
     // PCL2pointcloud2(*pcptr_point_cloud_intensity_,pc2_point_cloud_intensity_);
 
     BuildKdtree();
+
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] Initialization finish"<<std::endl;
+    }
+
 }
 
 SPCMapProcessing::~SPCMapProcessing()
@@ -102,7 +113,10 @@ void SPCMapProcessing::ROIMapPublisher(void)
         ROS_WARN_STREAM("KD TREE MAP IS EMPTY!");
         return;
     }
-
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] ROIMap pub start"<<std::endl;
+    }
     pcl::PointXYZRGB pt_search_point;
     pt_search_point.x = psstp_curr_enu_pose_.pose.position.x;
     pt_search_point.y = psstp_curr_enu_pose_.pose.position.y;
@@ -160,26 +174,50 @@ void SPCMapProcessing::ROIMapPublisher(void)
 template<typename T>
 bool SPCMapProcessing::MapReaderFromPCDToPCLXYZ(pcl::PointCloud<T> &input)
 {
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] MapReader start"<<std::endl;
+    }
     if(pcl::io::loadPCDFile<T> (param_str_pcd_file_path_.c_str(), input)==-1)
     {
         ROS_ERROR("PCD File read Error");
         return(-1);
     }
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] MapReader finish"<<std::endl;
+    }
 }
 bool SPCMapProcessing::MapReaderFromPCDToPointcloud2(pcl::PCLPointCloud2 &input)
 {
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] MapReader start"<<std::endl;
+    }
     if(pcl::io::loadPCDFile (param_str_pcd_file_path_.c_str(), input)==-1)
     {
         ROS_ERROR("PCD File read Error");
         return(-1);
+    }
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] MapReader finish"<<std::endl;
     }
 }
 
 template<typename T>
 bool SPCMapProcessing::PCL2pointcloud2(pcl::PointCloud<T> &input, sensor_msgs::PointCloud2 &pc2_point_cloud_rgb)
 {   
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] Convert PCL2pointcloud2 start"<<std::endl;
+    }
     pcl::toROSMsg(input, pc2_point_cloud_rgb);
     pc2_point_cloud_rgb.header.frame_id = FRAMEID;
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] Convert PCL2pointcloud2 finish"<<std::endl;
+    }
 }
 
 bool SPCMapProcessing::BuildKdtree(void)
@@ -232,6 +270,10 @@ void SPCMapProcessing::GetPointCloudROI(double d_range_x_m, double d_range_y_m, 
 
 double SPCMapProcessing::GetLowestHeight(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &input)
 {
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] GetLowestHeight start"<<std::endl;
+    }
     pcl::PointXY pt_search_point;
 
     pt_search_point.x = psstp_curr_enu_pose_.pose.position.x;
@@ -250,6 +292,10 @@ double SPCMapProcessing::GetLowestHeight(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
     
     if(vec_point_idx_nearest_k_search.size() < 1)
     {
+        if(param_DEBUG_MODE_)
+        {
+            ROS_WARN_STREAM("[MAP PUBLISHER] CAN NOT GET LOW HEIGHT");
+        }
         return FLT_MAX;
     }
 
@@ -264,6 +310,11 @@ double SPCMapProcessing::GetLowestHeight(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
             d_min_height = d_tmp_z;
         }
     }
+
+    if(param_DEBUG_MODE_)
+        {
+            std::cout<<"[MAP PUBLISHER] GetLowestHeight finish"<<std::endl;
+        }
 
     return d_min_height;
 }
@@ -394,7 +445,15 @@ geometry_msgs::Pose SPCMapProcessing::GetMapBasedRollPitch(pcl::PointCloud<pcl::
     return pose_output_msg;
 }
 void SPCMapProcessing::PointCloudPublisher() {
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] PointCloudPublisher start"<<std::endl;
+    }
     rospub_map_rgb_.publish(pc2_point_cloud_rgb_);
+    if(param_DEBUG_MODE_)
+    {
+        std::cout<<"[MAP PUBLISHER] PointCloudPublisher finish"<<std::endl;
+    }
 }
 
 int main(int argc, char **argv) {

@@ -103,6 +103,8 @@ class LandmarkMatchingPF
 
     };
 
+    ///////////////////////////////////////////////////////////////////
+    // 0. Initialization
     public:
         explicit LandmarkMatchingPF();
         ~LandmarkMatchingPF();
@@ -112,29 +114,30 @@ class LandmarkMatchingPF
     private:
         bool checker_b_is_first_IMU_step_;
 
+    ///////////////////////////////////////////////////////////////////
+    // 1. I/O
     private:
-    // IO
         ros::NodeHandle nh;
         ros::Subscriber rossub_novatel_inspvax_;
         ros::Subscriber rossub_novatel_corrimu_;
         ros::Subscriber rossub_ublox_hnrpvt_;
-        ros::Subscriber rossub_velodyne_point_cloud_;
+        ros::Subscriber rossub_velodyne_;
         ros::Subscriber rossub_map_height_;
         ros::Subscriber rossub_global_point_cloud_map_;
         ros::Subscriber rossub_global_semantic_point_cloud_map_;
-        ros::Subscriber rossub_front_image_;
+        ros::Subscriber rossub_image_;
         ros::Subscriber rossub_local_point_cloud_map_;
         ros::Subscriber rossub_segmented_image_deeplab_;
         ros::Subscriber rossub_image_yolo_detection_label_;
 
         ros::Publisher rospub_novatel_enu_pose_;
         ros::Publisher rospub_ublox_enu_pose_;
-        ros::Publisher rospub_transformed_ego_point_cloud_;
+        ros::Publisher rospub_transformed_point_cloud_;
         ros::Publisher rospub_cropped_point_cloud_;
         ros::Publisher rospub_estimated_pose_;
         ros::Publisher rospub_particle_pose_array_;
         ros::Publisher rospub_gps_quality_;
-        ros::Publisher rospub_pose_error_;
+        ros::Publisher rospub_error_pose_;
         ros::Publisher rospub_particle_marker_array_;
         ros::Publisher rospub_matching_score_;
 
@@ -145,11 +148,11 @@ class LandmarkMatchingPF
         const double D_RAD_2_DEG = 180 / M_PI;
         const double D_DEG_2_RAD = M_PI / 180;
 
-        ImuData imu_imu_raw_data_;
-        GpsData gps_gps_raw_data_;
-        GpsData gps_ublox_raw_data_;
-        GpsData gps_first_gps_data;
-        GpsData gps_first_ublox_data;
+        ImuData imu_imu_data_;
+        GpsData gps_gps_data_;
+        GpsData gps_ublox_data_;
+        GpsData gps_init_gps_data;
+        GpsData gps_init_ublox_data;
 
         geometry_msgs::PoseStamped psstp_init_gnss_enu_pose_;
         geometry_msgs::PoseStamped psstp_init_ublox_enu_pose_;
@@ -158,12 +161,11 @@ class LandmarkMatchingPF
         std::string strmsg_result_path_;
         std::string m_str_fileName;
 
-        double array_ego_vehicle_state_[3];
+        double array_ego_vehicle_pose_[3];
         double d_map_height_;
         double d_map_roll_;
         double d_map_pitch_;
 
-    // Launch file param
         double param_d_input_vel_sigma_ms_;
         double param_d_input_yaw_rate_sigma_degs_;
         double param_d_input_yaw_rate_sigma_rads_;
@@ -245,35 +247,35 @@ class LandmarkMatchingPF
         int param_i_num_sampling_tunnel_light_;
         int param_i_num_sampling_tunnel_hydrant_;
 
-        double param_d_lane_min_x_roi_m_;
-        double param_d_lane_max_x_roi_m_;
-        double param_d_lane_min_y_roi_m_;
-        double param_d_lane_max_y_roi_m_;
+        double param_d_lane_min_x_m_;
+        double param_d_lane_max_x_m_;
+        double param_d_lane_min_y_m_;
+        double param_d_lane_max_y_m_;
 
-        double param_d_building_min_x_roi_m_;
-        double param_d_building_max_x_roi_m_;
-        double param_d_building_min_y_roi_m_;
-        double param_d_building_max_y_roi_m_;
+        double param_d_building_min_x_m_;
+        double param_d_building_max_x_m_;
+        double param_d_building_min_y_m_;
+        double param_d_building_max_y_m_;
 
-        double param_d_fence_min_x_roi_m_;
-        double param_d_fence_max_x_roi_m_;
-        double param_d_fence_min_y_roi_m;
-        double param_d_fence_max_y_roi_m_;
+        double param_d_fence_min_x_m_;
+        double param_d_fence_max_x_m_;
+        double param_d_fence_min_y_m;
+        double param_d_fence_max_y_m_;
 
-        double param_d_tunnel_min_x_roi_m_;
-        double param_d_tunnel_max_x_roi_m_;
-        double param_d_tunnel_min_y_roi_m_;
-        double param_d_tunnel_max_y_roi_m_;
+        double param_d_tunnel_min_x_m_;
+        double param_d_tunnel_max_x_m_;
+        double param_d_tunnel_min_y_m_;
+        double param_d_tunnel_max_y_m_;
 
-        double param_d_traffic_min_x_roi_m_;
-        double param_d_traffic_max_x_roi_m_;
-        double param_d_traffic_min_y_roi_m_;
-        double param_d_traffic_max_y_roi_m_;
+        double param_d_traffic_min_x_m_;
+        double param_d_traffic_max_x_m_;
+        double param_d_traffic_min_y_m_;
+        double param_d_traffic_max_y_m_;
 
-        double param_d_pole_min_x_roi_m_;
-        double param_d_pole_max_x_roi_m_;
-        double param_d_pole_min_y_roi_m_;
-        double param_d_pole_max_y_roi_m_;
+        double param_d_pole_min_x_m_;
+        double param_d_pole_max_x_m_;
+        double param_d_pole_min_y_m_;
+        double param_d_pole_max_y_m_;
 
         double param_d_pole_likelihood_thresholde_;
         double param_d_traffic_sign_likelihood_thresholde_;
@@ -416,7 +418,7 @@ class LandmarkMatchingPF
         void WeightUpdate(Eigen::MatrixXd* egmat_input_weight_mat);
         bool NormalizationWeight(Eigen::MatrixXd* egmat_input_weight_mat);
         
-    // 4-1. GpsData based Measurement Update
+    // 4-1. GPS based Measurement Update
         void GPSMeasurementUpdate(void);
 
     // 4-2. Point Cloud Map Matching based Measurement Update

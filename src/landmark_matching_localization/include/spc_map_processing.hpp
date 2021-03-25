@@ -93,6 +93,7 @@ private:
     double d_height_m_;
 
     // Mode Flag
+    double param_DEBUG_MODE_;
     double param_height_detection_type_minimum_;
 
     // Checker

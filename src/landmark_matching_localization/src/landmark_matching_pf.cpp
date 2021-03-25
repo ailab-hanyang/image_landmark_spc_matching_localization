@@ -1,25 +1,25 @@
 /*
- @copyright Automotive Intelligence Lab, Konkuk University
- @author kimchuorok@gmail.com, pauljiwon96@gmail.com, yondoo20@gmail.com 
- @file landmark_matching.cpp
- @Image Landmark and Semantic Point Cloud Map Matching Localization
- @version 1.0
- @date 2021-03-25
+ * @copyright Automotive Intelligence Lab, Konkuk University
+ * @author kimchuorok@gmail.com, pauljiwon96@gmail.com, yondoo20@gmail.com 
+ * @file landmark_matching.cpp
+ * @brief Image Landmark and Semantic Point Cloud Map Matching Localization
+ * @version 1.0
+ * @date 2021-03-25
  */
 
 #include "landmark_matching_pf.hpp"
 
 LandmarkMatchingPF::LandmarkMatchingPF()
-:checker_b_is_first_IMU_step_(false)      , checker_b_imu_data_exist_(false)       , checker_b_gps_data_exist_(false)     , checker_b_ublox_data_exist_(false)       , param_b_localization_type_spc_image_matching_(false),
-checker_b_gnss_data_init_(false)        , checker_b_reference_pose_data_init_(false)          , checker_b_initialization_complete_(false)            , checker_b_map_data_init_(false)              , d_map_height_(7.0),
-param_i_num_particle(10)      , i_num_of_state_(3)              , param_d_heading_sigma_deg_(0.0)         , param_b_refernce_gps_novatel_(true),
-param_d_input_vel_sigma_ms_(0.0)      , param_d_input_yaw_rate_sigma_degs_(0.0) , param_d_input_yaw_rate_sigma_rads_(0.0), param_d_input_acc_sigma_mss_(0.0)          , 
-param_d_east_sigma_m_(0.0)           , param_d_north_sigma_m_(0.0)            , param_d_heading_sigma_rad_(0.0)      , param_b_localization_type_point_cloud_map_matching_(false)  ,
-param_d_gnss_radius_boundary_m_(2.0), param_d_resampling_coefficent_(1.0)       , param_i_num_map_matching_random_sample_point_(1000)    , param_d_map_noise_measure_noise_sigma_m_(0.2) ,
-param_d_map_sigma_(10.0)      , checker_b_image_data_exist_(false)    , checker_b_image_contour_data_exist_(false)      , checker_b_segmented_image_data_exist_(false)     ,i_frame_count(0),
-d_map_roll_(0.)                 , d_map_pitch_(0.)         ,
+:checker_b_is_first_IMU_step_(false)  , checker_b_imu_data_exist_(false)            , checker_b_gps_data_exist_(false)          , checker_b_ublox_data_exist_(false)   , param_b_localization_type_spc_image_matching_(false),
+checker_b_gnss_data_init_(false)      , checker_b_reference_pose_data_init_(false)  , checker_b_initialization_complete_(false) , checker_b_map_data_init_(false)      , d_map_height_(7.0),
+param_i_num_particle(10)              , i_num_of_state_(3)                          , param_d_heading_sigma_deg_(0.0)           , param_b_refernce_gps_novatel_(true)  ,
+param_d_input_vel_sigma_ms_(0.0)      , param_d_input_yaw_rate_sigma_degs_(0.0)     , param_d_input_yaw_rate_sigma_rads_(0.0)   , param_d_input_acc_sigma_mss_(0.0)    , 
+param_d_east_sigma_m_(0.0)            , param_d_north_sigma_m_(0.0)                 , param_d_heading_sigma_rad_(0.0)           , param_b_localization_type_point_cloud_map_matching_(false) ,
+param_d_gnss_radius_boundary_m_(2.0)  , param_d_resampling_coefficent_(1.0)         , param_i_num_map_matching_random_sample_point_(1000)    , param_d_map_noise_measure_noise_sigma_m_(0.2) ,
+param_d_map_sigma_(10.0)              , checker_b_image_data_exist_(false)          , checker_b_image_contour_data_exist_(false)             , checker_b_segmented_image_data_exist_(false)  ,i_frame_count(0),
+d_map_roll_(0.)                       , d_map_pitch_(0.)         ,
 pcptr_input_local_point_cloud_map_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
-pcptr_building_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)     , pcptr_fence_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)          , 
+pcptr_building_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)     , pcptr_fence_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)         , 
 pcptr_lane_marking_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) , pcptr_trunk_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)         , 
 pcptr_pole_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)         , pcptr_traffic_sign_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)  , 
 pcptr_traffic_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>), pcptr_tunnel_fan_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>)    , 
@@ -29,10 +29,6 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
     int i_buffer_size = 1;
     int i_map_msg_buffer_size = 1000;
 
-    // egmat_lidar_vehicle_transform_ << 1., 0., 0., 0., 
-    //                            0., 1., 0., 0., 
-    //                            0., 0., 1., -0.2,
-    //                            0., 0., 0., 1.;
     egmat_lidar_vehicle_transform_ << 1., 0., 0., 0., 
                                0., 1., 0., 0., 
                                0., 0., 1., 0.,
@@ -41,9 +37,9 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
     rossub_novatel_inspvax_           = nh.subscribe("/novatel/oem7/inspvax", i_buffer_size, &LandmarkMatchingPF::CallBackNovatelINSPVAX, this);
     rossub_novatel_corrimu_           = nh.subscribe("/novatel/oem7/corrimu", i_buffer_size, &LandmarkMatchingPF::CallBackNovatelCORRIMU, this);
     rossub_ublox_hnrpvt_              = nh.subscribe("/ublox_msgs/hnrpvt", i_buffer_size, &LandmarkMatchingPF::CallBackUbloxHNRPVT, this);
-    rossub_velodyne_point_cloud_                  = nh.subscribe("/velodyne_points", i_buffer_size, &LandmarkMatchingPF::CallBackVelodyne, this);
+    rossub_velodyne_                  = nh.subscribe("/velodyne_points", i_buffer_size, &LandmarkMatchingPF::CallBackVelodyne, this);
     rossub_map_height_                = nh.subscribe("/map_height", i_buffer_size, &LandmarkMatchingPF::CallBackMapHeight, this);
-    rossub_front_image_                     = nh.subscribe("cam2/pylon_camera_node/image_raw", 1, &LandmarkMatchingPF::CallbackImage, this);
+    rossub_image_                     = nh.subscribe("cam2/pylon_camera_node/image_raw", 1, &LandmarkMatchingPF::CallbackImage, this);
 
 
     rossub_segmented_image_deeplab_           = nh.subscribe("/segmentation_image", i_buffer_size, &LandmarkMatchingPF::CallbackSegmentedImage, this);
@@ -62,19 +58,18 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
     rospub_estimated_pose_            = nh.advertise<geometry_msgs::PoseStamped>("/particleEstimatedPose", i_buffer_size);
     rospub_novatel_enu_pose_          = nh.advertise<geometry_msgs::PoseStamped>("/novatelENUPose", i_buffer_size);
     rospub_ublox_enu_pose_            = nh.advertise<geometry_msgs::PoseStamped>("/ubloxENUPose", i_buffer_size);
-    rospub_transformed_ego_point_cloud_   = nh.advertise<sensor_msgs::PointCloud2>("/transformed_point_cloud", i_buffer_size);
+    rospub_transformed_point_cloud_   = nh.advertise<sensor_msgs::PointCloud2>("/transformed_point_cloud", i_buffer_size);
     rospub_cropped_point_cloud_       = nh.advertise<sensor_msgs::PointCloud2>("/cropped_point_cloud", i_buffer_size);
     rospub_particle_marker_array_     = nh.advertise<visualization_msgs::MarkerArray>("/particle_marker_array", i_buffer_size);
 
     // Get error pose between novatel and estimated pose
-    rospub_pose_error_                = nh.advertise<geometry_msgs::Pose>("/error_pose", i_buffer_size);
+    rospub_error_pose_                = nh.advertise<geometry_msgs::Pose>("/error_pose", i_buffer_size);
 
     rospub_particle_pose_array_       = nh.advertise<geometry_msgs::PoseArray>("/particlePoseArray", i_buffer_size);
     rospub_gps_quality_              = nh.advertise<std_msgs::String>("/strmsg_gps_quality", i_buffer_size);
     rospub_matching_score_                = nh.advertise<std_msgs::String>("/laneScore", i_buffer_size);
 
     strmsg_result_path_ = "/home/soyeong/" + m_str_fileName;
-    // strmsg_result_path_ = "/home/soyeong/lane_matching.txt";
     std::remove(strmsg_result_path_.c_str());
 }
 
@@ -110,35 +105,35 @@ void LandmarkMatchingPF::GetParameter()
     nh.getParam("/landmark_matching_pf/param_d_map_noise_measure_noise_sigma_m_" , param_d_map_noise_measure_noise_sigma_m_);
     nh.getParam("/landmark_matching_pf/param_d_map_sigma_" , param_d_map_sigma_);
 
-    nh.getParam("/landmark_matching_pf/param_d_lane_min_x_roi_m_"         , param_d_lane_min_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_lane_max_x_roi_m_"         , param_d_lane_max_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_lane_min_y_roi_m_"         , param_d_lane_min_y_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_lane_max_y_roi_m_"         , param_d_lane_max_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_min_x_m_"         , param_d_lane_min_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_max_x_m_"         , param_d_lane_max_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_min_y_m_"         , param_d_lane_min_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_max_y_m_"         , param_d_lane_max_y_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_building_min_x_roi_m_"         , param_d_building_min_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_building_max_x_roi_m_"         , param_d_building_max_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_building_min_y_roi_m_"         , param_d_building_min_y_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_building_max_y_roi_m_"         , param_d_building_max_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_min_x_m_"         , param_d_building_min_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_max_x_m_"         , param_d_building_max_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_min_y_m_"         , param_d_building_min_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_max_y_m_"         , param_d_building_max_y_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_fence_min_x_roi_m_"         , param_d_fence_min_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_fence_max_x_roi_m_"         , param_d_fence_max_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_fence_min_y_roi_m"         , param_d_fence_min_y_roi_m);
-    nh.getParam("/landmark_matching_pf/param_d_fence_max_y_roi_m_"         , param_d_fence_max_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_min_x_m_"         , param_d_fence_min_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_max_x_m_"         , param_d_fence_max_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_min_y_m"         , param_d_fence_min_y_m);
+    nh.getParam("/landmark_matching_pf/param_d_fence_max_y_m_"         , param_d_fence_max_y_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_x_roi_m_"         , param_d_tunnel_min_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_x_roi_m_"         , param_d_tunnel_max_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_y_roi_m_"         , param_d_tunnel_min_y_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_y_roi_m_"         , param_d_tunnel_max_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_x_m_"         , param_d_tunnel_min_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_x_m_"         , param_d_tunnel_max_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_y_m_"         , param_d_tunnel_min_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_y_m_"         , param_d_tunnel_max_y_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_traffic_min_x_roi_m_"         , param_d_traffic_min_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_traffic_max_x_roi_m_"         , param_d_traffic_max_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_traffic_min_y_roi_m_"         , param_d_traffic_min_y_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_traffic_max_y_roi_m_"         , param_d_pole_max_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_min_x_m_"         , param_d_traffic_min_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_max_x_m_"         , param_d_traffic_max_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_min_y_m_"         , param_d_traffic_min_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_max_y_m_"         , param_d_pole_max_y_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_pole_min_x_roi_m_"         , param_d_pole_min_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_pole_max_x_roi_m_"         , param_d_pole_max_x_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_pole_min_y_roi_m_"         , param_d_pole_min_y_roi_m_);
-    nh.getParam("/landmark_matching_pf/param_d_pole_max_y_roi_m_"         , param_d_pole_max_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_min_x_m_"         , param_d_pole_min_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_max_x_m_"         , param_d_pole_max_x_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_min_y_m_"         , param_d_pole_min_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_max_y_m_"         , param_d_pole_max_y_m_);
 
     nh.getParam("/landmark_matching_pf/param_d_extrinsic_calibration_roll_deg_"         , param_d_extrinsic_calibration_roll_deg_);
     nh.getParam("/landmark_matching_pf/param_d_extrinsic_calibration_pitch_deg_"         , param_d_extrinsic_calibration_pitch_deg_);
@@ -235,7 +230,7 @@ void LandmarkMatchingPF::Run(){
 
     if(checker_b_imu_data_exist_){
         // prediction
-        imu_imu_raw_data_.vel_ms = gps_gps_raw_data_.vel_ms;
+        imu_imu_data_.vel_ms = gps_gps_data_.vel_ms;
         auto t1 = std::chrono::high_resolution_clock::now();
         PFPrediction();
         auto t2 = std::chrono::high_resolution_clock::now();
@@ -284,7 +279,7 @@ void LandmarkMatchingPF::Run(){
             {
                 egmat_init_state(idx_particle, 0) = psstp_gnss_enu_pose_.pose.position.x;
                 egmat_init_state(idx_particle, 1) = psstp_gnss_enu_pose_.pose.position.y;
-                egmat_init_state(idx_particle, 2) = gps_gps_raw_data_.yaw;
+                egmat_init_state(idx_particle, 2) = gps_gps_data_.yaw;
             }
             *egmat_timestamped_particle_state_ = egmat_init_state;
         }
@@ -292,7 +287,7 @@ void LandmarkMatchingPF::Run(){
         std::vector<cv::Point2d> vec_ref_position_point_projected_image;
 
         auto t1 = std::chrono::high_resolution_clock::now();
-        if((checker_b_image_contour_data_exist_ || checker_b_segmented_image_data_exist_)  && fabs(gps_gps_raw_data_.vel_ms*3.6) > 3.0) 
+        if((checker_b_image_contour_data_exist_ || checker_b_segmented_image_data_exist_)  && fabs(gps_gps_data_.vel_ms*3.6) > 3.0) 
         {
             param_b_refernce_gps_novatel_ = false;
 
@@ -345,8 +340,8 @@ void LandmarkMatchingPF::Run(){
     PublishParticlePoseArray();
     
     psstp_estimated_pose.header.frame_id   = "map";
-    psstp_estimated_pose.header.stamp.sec  = imu_imu_raw_data_.sec;
-    psstp_estimated_pose.header.stamp.nsec = imu_imu_raw_data_.nsec;
+    psstp_estimated_pose.header.stamp.sec  = imu_imu_data_.sec;
+    psstp_estimated_pose.header.stamp.nsec = imu_imu_data_.nsec;
 
     psstp_estimated_pose.pose.position.x = egmat_estimated_state_->coeff(0, 0);
     psstp_estimated_pose.pose.position.y = egmat_estimated_state_->coeff(0, 1);
@@ -364,24 +359,19 @@ void LandmarkMatchingPF::Run(){
     
     // Visualize GPS Sensor Data
     geometry_msgs::PoseStamped psstp_novatel_enu_pose;
-    psstp_novatel_enu_pose = ConvertToMapFrame(gps_gps_raw_data_.latitude, gps_gps_raw_data_.longitude, gps_gps_raw_data_.height);
+    psstp_novatel_enu_pose = ConvertToMapFrame(gps_gps_data_.latitude, gps_gps_data_.longitude, gps_gps_data_.height);
 
     geometry_msgs::PoseStamped psstp_ublox_enu_pose;
-    psstp_ublox_enu_pose = ConvertToMapFrame(gps_ublox_raw_data_.latitude, gps_ublox_raw_data_.longitude, gps_ublox_raw_data_.height);
+    psstp_ublox_enu_pose = ConvertToMapFrame(gps_ublox_data_.latitude, gps_ublox_data_.longitude, gps_ublox_data_.height);
 
     rospub_novatel_enu_pose_.publish(psstp_novatel_enu_pose);
     rospub_ublox_enu_pose_.publish(psstp_ublox_enu_pose);
 
     //Get error plot
-    // geometry_msgs::Pose errorPose;
-    // errorPose.position.x = psstp_estimated_pose.pose.position.x - psstp_novatel_enu_pose.pose.position.x;
-    // errorPose.position.y = psstp_estimated_pose.pose.position.y - psstp_novatel_enu_pose.pose.position.y;
-    // rospub_pose_error_.publish(errorPose);
-
-    geometry_msgs::Pose pose_height;
-    pose_height.position.x = 0.;
-    pose_height.position.y = d_map_height_;
-    rospub_pose_error_.publish(pose_height);
+    geometry_msgs::Pose errorPose;
+    errorPose.position.x = psstp_estimated_pose.pose.position.x - psstp_novatel_enu_pose.pose.position.x;
+    errorPose.position.y = psstp_estimated_pose.pose.position.y - psstp_novatel_enu_pose.pose.position.y;
+    rospub_error_pose_.publish(errorPose);
 }
 
 
@@ -423,88 +413,88 @@ void LandmarkMatchingPF::CallBackGlobalSemanticPointCloudMap(const sensor_msgs::
 
         if(rgb_points.r == 255 && rgb_points.g == 200 && rgb_points.b ==   0){ // str_building
 
-            if(rgb_points.x>param_d_building_min_x_roi_m_ && rgb_points.x<param_d_building_max_x_roi_m_ 
-                && rgb_points.y>param_d_building_min_y_roi_m_ && rgb_points.y<param_d_building_max_y_roi_m_)
+            if(rgb_points.x>param_d_building_min_x_m_ && rgb_points.x<param_d_building_max_x_m_ 
+                && rgb_points.y>param_d_building_min_y_m_ && rgb_points.y<param_d_building_max_y_m_)
             {
                 pcptr_building_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r ==   7 && rgb_points.g == 249 && rgb_points.b == 184){ // str_building
 
-            if(rgb_points.x>param_d_building_min_x_roi_m_ && rgb_points.x<param_d_building_max_x_roi_m_ 
-                && rgb_points.y>param_d_building_min_y_roi_m_ && rgb_points.y<param_d_building_max_y_roi_m_)
+            if(rgb_points.x>param_d_building_min_x_m_ && rgb_points.x<param_d_building_max_x_m_ 
+                && rgb_points.y>param_d_building_min_y_m_ && rgb_points.y<param_d_building_max_y_m_)
             {
                 pcptr_building_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 255 && rgb_points.g == 120 && rgb_points.b ==  50){ // str_fence
 
-            if(rgb_points.x>param_d_fence_min_x_roi_m_ && rgb_points.x<param_d_fence_max_x_roi_m_ 
-                && rgb_points.y>param_d_fence_min_y_roi_m && rgb_points.y<param_d_fence_max_y_roi_m_)
+            if(rgb_points.x>param_d_fence_min_x_m_ && rgb_points.x<param_d_fence_max_x_m_ 
+                && rgb_points.y>param_d_fence_min_y_m && rgb_points.y<param_d_fence_max_y_m_)
             {
                 pcptr_fence_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 150 && rgb_points.g == 255 && rgb_points.b == 170){ // lane marking
 
-            if(rgb_points.x>param_d_lane_min_x_roi_m_ && rgb_points.x<param_d_lane_max_x_roi_m_ 
-                && rgb_points.y>param_d_lane_min_y_roi_m_ && rgb_points.y<param_d_lane_max_y_roi_m_)
+            if(rgb_points.x>param_d_lane_min_x_m_ && rgb_points.x<param_d_lane_max_x_m_ 
+                && rgb_points.y>param_d_lane_min_y_m_ && rgb_points.y<param_d_lane_max_y_m_)
             {
                 pcptr_lane_marking_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 135 && rgb_points.g ==  60 && rgb_points.b ==   0){ // trunk
 
-            if(rgb_points.x>param_d_pole_min_x_roi_m_ && rgb_points.x<param_d_pole_max_x_roi_m_ 
-                && rgb_points.y>param_d_pole_min_y_roi_m_ && rgb_points.y<param_d_pole_max_y_roi_m_)
+            if(rgb_points.x>param_d_pole_min_x_m_ && rgb_points.x<param_d_pole_max_x_m_ 
+                && rgb_points.y>param_d_pole_min_y_m_ && rgb_points.y<param_d_pole_max_y_m_)
             {
                 pcptr_pole_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 255 && rgb_points.g == 240 && rgb_points.b == 150){ // str_pole
 
-            if(rgb_points.x>param_d_pole_min_x_roi_m_ && rgb_points.x<param_d_pole_max_x_roi_m_ 
-                && rgb_points.y>param_d_pole_min_y_roi_m_ && rgb_points.y<param_d_pole_max_y_roi_m_)
+            if(rgb_points.x>param_d_pole_min_x_m_ && rgb_points.x<param_d_pole_max_x_m_ 
+                && rgb_points.y>param_d_pole_min_y_m_ && rgb_points.y<param_d_pole_max_y_m_)
             {
                 pcptr_pole_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 255 && rgb_points.g ==   0 && rgb_points.b ==   0){ // traffic sign
 
-            if(rgb_points.x>param_d_traffic_min_x_roi_m_ && rgb_points.x<param_d_traffic_max_x_roi_m_ 
-                && rgb_points.y>param_d_traffic_min_y_roi_m_ && rgb_points.y<param_d_traffic_max_y_roi_m_)
+            if(rgb_points.x>param_d_traffic_min_x_m_ && rgb_points.x<param_d_traffic_max_x_m_ 
+                && rgb_points.y>param_d_traffic_min_y_m_ && rgb_points.y<param_d_traffic_max_y_m_)
             {
                 pcptr_traffic_sign_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r ==   0 && rgb_points.g ==   0 && rgb_points.b == 255){ // traffic light
 
-            if(rgb_points.x>param_d_traffic_min_x_roi_m_ && rgb_points.x<param_d_traffic_max_x_roi_m_ 
-                && rgb_points.y>param_d_traffic_min_y_roi_m_ && rgb_points.y<param_d_traffic_max_y_roi_m_)
+            if(rgb_points.x>param_d_traffic_min_x_m_ && rgb_points.x<param_d_traffic_max_x_m_ 
+                && rgb_points.y>param_d_traffic_min_y_m_ && rgb_points.y<param_d_traffic_max_y_m_)
             {
                 pcptr_traffic_light_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r ==   0 && rgb_points.g == 100 && rgb_points.b ==  80){ // tunnel fan
 
-            if(rgb_points.x>param_d_tunnel_min_x_roi_m_ && rgb_points.x<param_d_tunnel_max_x_roi_m_ 
-                && rgb_points.y>param_d_tunnel_min_y_roi_m_ && rgb_points.y<param_d_tunnel_max_y_roi_m_)
+            if(rgb_points.x>param_d_tunnel_min_x_m_ && rgb_points.x<param_d_tunnel_max_x_m_ 
+                && rgb_points.y>param_d_tunnel_min_y_m_ && rgb_points.y<param_d_tunnel_max_y_m_)
             {
                 pcptr_tunnel_fan_point_cluod->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 174 && rgb_points.g ==  95 && rgb_points.b == 137){ // tunnel light
 
-            if(rgb_points.x>param_d_tunnel_min_x_roi_m_ && rgb_points.x<param_d_tunnel_max_x_roi_m_ 
-                && rgb_points.y>param_d_tunnel_min_y_roi_m_ && rgb_points.y<param_d_tunnel_max_y_roi_m_)
+            if(rgb_points.x>param_d_tunnel_min_x_m_ && rgb_points.x<param_d_tunnel_max_x_m_ 
+                && rgb_points.y>param_d_tunnel_min_y_m_ && rgb_points.y<param_d_tunnel_max_y_m_)
             {
                 pcptr_tunnel_light_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 171 && rgb_points.g ==   0 && rgb_points.b == 255){ // tunnel hydrant
 
-            if(rgb_points.x>param_d_tunnel_min_x_roi_m_ && rgb_points.x<param_d_tunnel_max_x_roi_m_ 
-                && rgb_points.y>param_d_tunnel_min_y_roi_m_ && rgb_points.y<param_d_tunnel_max_y_roi_m_)
+            if(rgb_points.x>param_d_tunnel_min_x_m_ && rgb_points.x<param_d_tunnel_max_x_m_ 
+                && rgb_points.y>param_d_tunnel_min_y_m_ && rgb_points.y<param_d_tunnel_max_y_m_)
             {
                 pcptr_tunnel_hydrant_point_cloud->points.push_back(rgb_points);
             }
@@ -755,7 +745,7 @@ void LandmarkMatchingPF::CallBackVelodyne(const sensor_msgs::PointCloud2::ConstP
         ROS_ERROR("%s",ex.what());
     }
     pcl_ros::transformPointCloud("map", transform_tf, *msg, pc2_output_point_cloud);
-    rospub_transformed_ego_point_cloud_.publish(pc2_output_point_cloud);
+    rospub_transformed_point_cloud_.publish(pc2_output_point_cloud);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcptr_point_cloud_input(new pcl::PointCloud<pcl::PointXYZRGB>);
     pcptr_point_cloud_input->clear();
@@ -767,17 +757,6 @@ void LandmarkMatchingPF::CallBackVelodyne(const sensor_msgs::PointCloud2::ConstP
 void LandmarkMatchingPF::CallBackMapHeight(const geometry_msgs::Pose::ConstPtr &msg)
 {
     d_map_height_ = msg->position.z + param_d_imu_height_m_;
-    tf::Quaternion tfquat_quaternion(
-        msg->orientation.x,
-        msg->orientation.y,
-        msg->orientation.z,
-        msg->orientation.w);
-        
-    // tf::Matrix3x3 m(tfquat_quaternion);
-    // double calibration_d_roll_deg, calibration_d_pitch_deg, yaw;
-    // m.getRPY(calibration_d_roll_deg, calibration_d_pitch_deg, yaw);
-    // d_map_roll_   = calibration_d_roll_deg;
-    // d_map_pitch_  = calibration_d_pitch_deg;
 }
 
 void LandmarkMatchingPF::CallbackImage(const sensor_msgs::ImageConstPtr& input)
@@ -796,74 +775,74 @@ void LandmarkMatchingPF::CallBackNovatelINSPVAX(const novatel_oem7_msgs::INSPVAX
     double d_novatel_heading_bias_deg = 90.0;
 
     if(!checker_b_gnss_data_init_ && param_b_refernce_gps_novatel_ && (checker_b_map_data_init_ || param_b_localization_type_gps_)){
-        gps_first_gps_data.timestamp     = (double)msg->header.stamp.sec * 1e6 + (double)msg->header.stamp.nsec / 1e3;
-        gps_first_gps_data.sec           = (double)msg->header.stamp.sec;
-        gps_first_gps_data.nsec          = (double)msg->header.stamp.nsec;
-        gps_first_gps_data.latitude      = msg->latitude;
-        gps_first_gps_data.longitude     = msg->longitude;
-        gps_first_gps_data.height        = msg->height;
-        gps_first_gps_data.yaw           = (-1. * msg->azimuth + d_novatel_heading_bias_deg) * M_PI /180.;
-        gps_first_gps_data.vel_ms        = sqrt(pow(msg->north_velocity,2)+pow(msg->east_velocity,2));
-        gps_first_gps_data.latitude_std  = msg->latitude_stdev;
-        gps_first_gps_data.longitude_std = msg->longitude_stdev;
-        gps_first_gps_data.height_std    = msg->height_stdev;
+        gps_init_gps_data.timestamp     = (double)msg->header.stamp.sec * 1e6 + (double)msg->header.stamp.nsec / 1e3;
+        gps_init_gps_data.sec           = (double)msg->header.stamp.sec;
+        gps_init_gps_data.nsec          = (double)msg->header.stamp.nsec;
+        gps_init_gps_data.latitude      = msg->latitude;
+        gps_init_gps_data.longitude     = msg->longitude;
+        gps_init_gps_data.height        = msg->height;
+        gps_init_gps_data.yaw           = (-1. * msg->azimuth + d_novatel_heading_bias_deg) * M_PI /180.;
+        gps_init_gps_data.vel_ms        = sqrt(pow(msg->north_velocity,2)+pow(msg->east_velocity,2));
+        gps_init_gps_data.latitude_std  = msg->latitude_stdev;
+        gps_init_gps_data.longitude_std = msg->longitude_stdev;
+        gps_init_gps_data.height_std    = msg->height_stdev;
 
-        psstp_init_gnss_enu_pose_ = ConvertToMapFrame(gps_first_gps_data.latitude, gps_first_gps_data.longitude, gps_first_gps_data.height);
+        psstp_init_gnss_enu_pose_ = ConvertToMapFrame(gps_init_gps_data.latitude, gps_init_gps_data.longitude, gps_init_gps_data.height);
 
-        array_ego_vehicle_state_[0] = psstp_init_gnss_enu_pose_.pose.position.x;
-        array_ego_vehicle_state_[1] = psstp_init_gnss_enu_pose_.pose.position.y;
-        array_ego_vehicle_state_[2] = gps_first_gps_data.yaw;
+        array_ego_vehicle_pose_[0] = psstp_init_gnss_enu_pose_.pose.position.x;
+        array_ego_vehicle_pose_[1] = psstp_init_gnss_enu_pose_.pose.position.y;
+        array_ego_vehicle_pose_[2] = gps_init_gps_data.yaw;
 
-        PFParticleInit(array_ego_vehicle_state_);
+        PFParticleInit(array_ego_vehicle_pose_);
         
         checker_b_gnss_data_init_ = true;
     }
     checker_b_gps_data_exist_ = true;
     
-    gps_gps_raw_data_.timestamp = (double)msg->header.stamp.sec * 1e6 + (double)msg->header.stamp.nsec / 1e3;
+    gps_gps_data_.timestamp = (double)msg->header.stamp.sec * 1e6 + (double)msg->header.stamp.nsec / 1e3;
 
     std::string str_gps_quality;
 
     switch(msg->pos_type.type)
     {
         case 16:
-            gps_gps_raw_data_.quality = 8;
+            gps_gps_data_.quality = 8;
             str_gps_quality = "SINGLE";
             break;
         case 17:
-            gps_gps_raw_data_.quality = 7;
+            gps_gps_data_.quality = 7;
             str_gps_quality = "PSRDIFF";
             break;
         case 34:
-            gps_gps_raw_data_.quality = 6;
+            gps_gps_data_.quality = 6;
             str_gps_quality = "NARROW_FLOAT";
             break;
         case 49:
-            gps_gps_raw_data_.quality = 5;
+            gps_gps_data_.quality = 5;
             str_gps_quality = "WIDE_INT";
             break;
         case 50:
-            gps_gps_raw_data_.quality = 4;
+            gps_gps_data_.quality = 4;
             str_gps_quality = "NARROW_INT";
             break;
         case 53:
-            gps_gps_raw_data_.quality = 3;
+            gps_gps_data_.quality = 3;
             str_gps_quality = "INS_PSRSP";
             break;
         case 54:
-            gps_gps_raw_data_.quality = 2;
+            gps_gps_data_.quality = 2;
             str_gps_quality = "INS_PSRDIFF";
             break;
         case 55:
-            gps_gps_raw_data_.quality = 1;
+            gps_gps_data_.quality = 1;
             str_gps_quality = "INS_RTKFLOAT";
             break;
         case 56:
-            gps_gps_raw_data_.quality = 0;
+            gps_gps_data_.quality = 0;
             str_gps_quality = "INS_RTKFIXED";
             break;
         default:
-            gps_gps_raw_data_.quality = -1;
+            gps_gps_data_.quality = -1;
             str_gps_quality = "INVALID QUALITY TYPE";
             break;
     }
@@ -875,28 +854,23 @@ void LandmarkMatchingPF::CallBackNovatelINSPVAX(const novatel_oem7_msgs::INSPVAX
         rospub_gps_quality_.publish(strmsg_gps_quality);
     }
 
-    // d_map_roll_ = -(msg->calibration_d_roll_deg) * M_PI / 180.;
-    // d_map_pitch_ = -(msg->calibration_d_pitch_deg) * M_PI / 180.;
+    gps_gps_data_.latitude         = msg->latitude;
+    gps_gps_data_.longitude        = msg->longitude;
+    gps_gps_data_.height           = msg->height;
 
-    gps_gps_raw_data_.latitude         = msg->latitude;
-    gps_gps_raw_data_.longitude        = msg->longitude;
-    gps_gps_raw_data_.height           = msg->height;
+    gps_gps_data_.latitude_std     = msg->latitude_stdev;
+    gps_gps_data_.longitude_std    = msg->longitude_stdev;
+    gps_gps_data_.height_std       = msg->height_stdev;
 
-    gps_gps_raw_data_.latitude_std     = msg->latitude_stdev;
-    gps_gps_raw_data_.longitude_std    = msg->longitude_stdev;
-    gps_gps_raw_data_.height_std       = msg->height_stdev;
+    gps_gps_data_.yaw              = (-1. * msg->azimuth + d_novatel_heading_bias_deg) * M_PI /180.;
+    gps_gps_data_.vel_ms           = sqrt(pow(msg->north_velocity,2)+pow(msg->east_velocity,2));
 
-    gps_gps_raw_data_.yaw              = (-1. * msg->azimuth + d_novatel_heading_bias_deg) * M_PI /180.;
-    gps_gps_raw_data_.vel_ms           = sqrt(pow(msg->north_velocity,2)+pow(msg->east_velocity,2));
-
-    // geometry_msgs::PoseStamped psstp_gnss_enu_pose_;
-
-    psstp_gnss_enu_pose_ = ConvertToMapFrame(gps_gps_raw_data_.latitude, gps_gps_raw_data_.longitude, gps_gps_raw_data_.height);
+    psstp_gnss_enu_pose_ = ConvertToMapFrame(gps_gps_data_.latitude, gps_gps_data_.longitude, gps_gps_data_.height);
 
     double array_tmp_gps_state[3];
     array_tmp_gps_state[0] = psstp_gnss_enu_pose_.pose.position.x;
     array_tmp_gps_state[1] = psstp_gnss_enu_pose_.pose.position.y;
-    array_tmp_gps_state[2] = gps_gps_raw_data_.yaw;
+    array_tmp_gps_state[2] = gps_gps_data_.yaw;
         
     if(param_b_refernce_gps_novatel_)
     {
@@ -906,7 +880,6 @@ void LandmarkMatchingPF::CallBackNovatelINSPVAX(const novatel_oem7_msgs::INSPVAX
             ROS_ERROR_STREAM("Particle Filter Fault Detection !!! ");
         }
     }
-
 }
 
 void LandmarkMatchingPF::CallBackNovatelCORRIMU(const novatel_oem7_msgs::CORRIMU::ConstPtr &msg)
@@ -923,12 +896,11 @@ void LandmarkMatchingPF::CallBackNovatelCORRIMU(const novatel_oem7_msgs::CORRIMU
 
     double d_sample_time = (d_timestamp - d_prev_timestamp)/1e6;
 
-    imu_imu_raw_data_.timestamp      = d_timestamp;
-    imu_imu_raw_data_.sec            = (double)msg->header.stamp.sec;
-    imu_imu_raw_data_.nsec           = (double)msg->header.stamp.nsec;
-    imu_imu_raw_data_.yaw_rate_rads  = (msg->yaw_rate/d_sample_time)*10;
-    imu_imu_raw_data_.acc_mss        = msg->longitudinal_acc/d_sample_time;
-
+    imu_imu_data_.timestamp      = d_timestamp;
+    imu_imu_data_.sec            = (double)msg->header.stamp.sec;
+    imu_imu_data_.nsec           = (double)msg->header.stamp.nsec;
+    imu_imu_data_.yaw_rate_rads  = (msg->yaw_rate/d_sample_time)*10;
+    imu_imu_data_.acc_mss        = msg->longitudinal_acc/d_sample_time;
     d_prev_timestamp = d_timestamp;
 }
 
@@ -937,61 +909,61 @@ void LandmarkMatchingPF::CallBackUbloxHNRPVT(const ublox_msgs::HnrPVT::ConstPtr 
     double d_ublox_heading_bias_deg = 90.0;
 
     if(!checker_b_gnss_data_init_ && !param_b_refernce_gps_novatel_ && (checker_b_map_data_init_ || param_b_localization_type_gps_)){
-        gps_first_ublox_data.timestamp     = ros::Time::now().sec * 1e6 + ros::Time::now().nsec / 1e3;
-        gps_first_ublox_data.sec           = ros::Time::now().sec;
-        gps_first_ublox_data.nsec          = ros::Time::now().nsec;
-        gps_first_ublox_data.latitude    = msg->lat/10000000.0;
-        gps_first_ublox_data.longitude   = msg->lon/10000000.0;
-        gps_first_ublox_data.height      = msg->height/1000.0;
-        gps_first_ublox_data.yaw         = (-1. * msg->headVeh / 100000.0 + d_ublox_heading_bias_deg) * M_PI /180.;
-        gps_first_ublox_data.vel_ms      = msg->speed/1000.0;
-        gps_first_ublox_data.latitude_std  = msg->hAcc/1000.0;
-        gps_first_ublox_data.longitude_std = msg->vAcc/1000.0;
+        gps_init_ublox_data.timestamp     = ros::Time::now().sec * 1e6 + ros::Time::now().nsec / 1e3;
+        gps_init_ublox_data.sec           = ros::Time::now().sec;
+        gps_init_ublox_data.nsec          = ros::Time::now().nsec;
+        gps_init_ublox_data.latitude    = msg->lat/10000000.0;
+        gps_init_ublox_data.longitude   = msg->lon/10000000.0;
+        gps_init_ublox_data.height      = msg->height/1000.0;
+        gps_init_ublox_data.yaw         = (-1. * msg->headVeh / 100000.0 + d_ublox_heading_bias_deg) * M_PI /180.;
+        gps_init_ublox_data.vel_ms      = msg->speed/1000.0;
+        gps_init_ublox_data.latitude_std  = msg->hAcc/1000.0;
+        gps_init_ublox_data.longitude_std = msg->vAcc/1000.0;
 
-        psstp_init_ublox_enu_pose_ = ConvertToMapFrame(gps_first_ublox_data.latitude, gps_first_ublox_data.longitude, gps_first_ublox_data.height);
-        array_ego_vehicle_state_[0] = psstp_init_ublox_enu_pose_.pose.position.x;
-        array_ego_vehicle_state_[1] = psstp_init_ublox_enu_pose_.pose.position.y;
-        array_ego_vehicle_state_[2] = gps_first_ublox_data.yaw;
+        psstp_init_ublox_enu_pose_ = ConvertToMapFrame(gps_init_ublox_data.latitude, gps_init_ublox_data.longitude, gps_init_ublox_data.height);
+        array_ego_vehicle_pose_[0] = psstp_init_ublox_enu_pose_.pose.position.x;
+        array_ego_vehicle_pose_[1] = psstp_init_ublox_enu_pose_.pose.position.y;
+        array_ego_vehicle_pose_[2] = gps_init_ublox_data.yaw;
 
-        PFParticleInit(array_ego_vehicle_state_);
+        PFParticleInit(array_ego_vehicle_pose_);
 
         checker_b_gnss_data_init_ = true;
     }
 
     checker_b_ublox_data_exist_ = true;
     
-    gps_ublox_raw_data_.timestamp = ros::Time::now().sec * 1e6 + ros::Time::now().nsec / 1e3;
+    gps_ublox_data_.timestamp = ros::Time::now().sec * 1e6 + ros::Time::now().nsec / 1e3;
 
     std::string str_gps_quality;
 
     switch(msg->gpsFix)
     {
         case 0:
-            gps_ublox_raw_data_.quality = 6;
+            gps_ublox_data_.quality = 6;
             str_gps_quality = "NO FIX";
             break;
         case 1:
-            gps_ublox_raw_data_.quality = 4;
+            gps_ublox_data_.quality = 4;
             str_gps_quality = "DEAD RECKONING ONLY";
             break;
         case 2:
-            gps_ublox_raw_data_.quality = 3;
+            gps_ublox_data_.quality = 3;
             str_gps_quality = "2D";
             break;
         case 3:
-            gps_ublox_raw_data_.quality = 2;
+            gps_ublox_data_.quality = 2;
             str_gps_quality = "3D";
             break;
         case 4:
-            gps_ublox_raw_data_.quality = 1;
+            gps_ublox_data_.quality = 1;
             str_gps_quality = "GPS DEAD RECKONING COMBINED";
             break;
         case 5:
-            gps_ublox_raw_data_.quality = 5;
+            gps_ublox_data_.quality = 5;
             str_gps_quality = "TIME ONLY";
             break;
         default:
-            gps_ublox_raw_data_.quality = -1;
+            gps_ublox_data_.quality = -1;
             str_gps_quality = "INVALID QUALITY TYPE";
             break;
     }
@@ -1003,22 +975,22 @@ void LandmarkMatchingPF::CallBackUbloxHNRPVT(const ublox_msgs::HnrPVT::ConstPtr 
         rospub_gps_quality_.publish(strmsg_gps_quality);
     }
 
-    gps_ublox_raw_data_.latitude  = msg->lat/10000000.0;
-    gps_ublox_raw_data_.longitude = msg->lon/10000000.0;
-    gps_ublox_raw_data_.height    = msg->height/1000.0;
-    gps_ublox_raw_data_.latitude_std  = msg->hAcc/1000.0;
-    gps_ublox_raw_data_.longitude_std = msg->vAcc/1000.0;
+    gps_ublox_data_.latitude  = msg->lat/10000000.0;
+    gps_ublox_data_.longitude = msg->lon/10000000.0;
+    gps_ublox_data_.height    = msg->height/1000.0;
+    gps_ublox_data_.latitude_std  = msg->hAcc/1000.0;
+    gps_ublox_data_.longitude_std = msg->vAcc/1000.0;
 
-    gps_ublox_raw_data_.yaw       = (-1. * msg->headVeh / 100000.0 + d_ublox_heading_bias_deg) * M_PI /180.;
-    gps_ublox_raw_data_.vel_ms    = msg->speed/1000.0;
+    gps_ublox_data_.yaw       = (-1. * msg->headVeh / 100000.0 + d_ublox_heading_bias_deg) * M_PI /180.;
+    gps_ublox_data_.vel_ms    = msg->speed/1000.0;
     
     geometry_msgs::PoseStamped psstp_gnss_enu_pose_;
 
-    psstp_gnss_enu_pose_ = ConvertToMapFrame(gps_ublox_raw_data_.latitude, gps_ublox_raw_data_.longitude, gps_ublox_raw_data_.height);
+    psstp_gnss_enu_pose_ = ConvertToMapFrame(gps_ublox_data_.latitude, gps_ublox_data_.longitude, gps_ublox_data_.height);
     double array_tmp_gps_state[3];
     array_tmp_gps_state[0] = psstp_gnss_enu_pose_.pose.position.x;
     array_tmp_gps_state[1] = psstp_gnss_enu_pose_.pose.position.y;
-    array_tmp_gps_state[2] = gps_ublox_raw_data_.yaw;
+    array_tmp_gps_state[2] = gps_ublox_data_.yaw;
         
     if(!param_b_refernce_gps_novatel_)
     {
@@ -1059,11 +1031,11 @@ bool LandmarkMatchingPF::PFFaultDetection(void)
 
     if(param_b_refernce_gps_novatel_)
     {
-        gps_gps = gps_gps_raw_data_;
+        gps_gps = gps_gps_data_;
     }
     else
     {
-        gps_gps = gps_ublox_raw_data_;
+        gps_gps = gps_ublox_data_;
     }
 
     if((int)gps_gps.quality>3)
@@ -1115,16 +1087,16 @@ bool LandmarkMatchingPF::PFPrediction(void)
     double array_tmp_state[3] = {0. , 0. , 0.};
     Eigen::MatrixXd egmat_pred_state(param_i_num_particle,i_num_of_state_);
 
-    static double d_prev_timestamp_ms = imu_imu_raw_data_.timestamp;
+    static double d_prev_timestamp_ms = imu_imu_data_.timestamp;
 
-    double d_delta_t = (imu_imu_raw_data_.timestamp - d_prev_timestamp_ms)/1e6;
-    d_prev_timestamp_ms = imu_imu_raw_data_.timestamp;
+    double d_delta_t = (imu_imu_data_.timestamp - d_prev_timestamp_ms)/1e6;
+    d_prev_timestamp_ms = imu_imu_data_.timestamp;
 
     for(int idx_particle = 0; idx_particle < param_i_num_particle; idx_particle++)
     {
-        array_tmp_input[0] = imu_imu_raw_data_.vel_ms           + GaussianRandomGenerator(0, param_d_input_vel_sigma_ms_);
-        array_tmp_input[1] = imu_imu_raw_data_.yaw_rate_rads    + GaussianRandomGenerator(0, param_d_input_yaw_rate_sigma_rads_);
-        array_tmp_input[2] = imu_imu_raw_data_.acc_mss          + GaussianRandomGenerator(0, param_d_input_acc_sigma_mss_);
+        array_tmp_input[0] = imu_imu_data_.vel_ms           + GaussianRandomGenerator(0, param_d_input_vel_sigma_ms_);
+        array_tmp_input[1] = imu_imu_data_.yaw_rate_rads    + GaussianRandomGenerator(0, param_d_input_yaw_rate_sigma_rads_);
+        array_tmp_input[2] = imu_imu_data_.acc_mss          + GaussianRandomGenerator(0, param_d_input_acc_sigma_mss_);
 
         array_tmp_state[0] = egmat_timestamped_particle_state_->coeff(idx_particle, 0) + GaussianRandomGenerator(0, param_d_east_sigma_m_);
         array_tmp_state[1] = egmat_timestamped_particle_state_->coeff(idx_particle, 1) + GaussianRandomGenerator(0, param_d_north_sigma_m_);
@@ -1256,17 +1228,10 @@ bool LandmarkMatchingPF::PFResampling(void)
 	}
 
     //Resampling
-    // *egmat_timestamped_particle_state_resampling_ = Eigen::MatrixXd::Zero(param_i_num_particle, i_num_of_state_); //reset
     *egmat_timestamped_particle_state_resampling_ = *egmat_timestamped_particle_state_;
 
     if(d_eff_particle_num < param_d_resampling_coefficent_ * param_i_num_particle)
     {
-        std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-        std::cout << "!!!!!!!!!!!!!!!!PARTICLE RESAMPLING ON!!!!!!!!!!!!!!!!!" << std::endl;
-        std::cout << "!!!!!!!!!!!!!!!!PARTICLE RESAMPLING ON!!!!!!!!!!!!!!!!!" << std::endl;
-        std::cout << "!!!!!!!!!!!!!!!!PARTICLE RESAMPLING ON!!!!!!!!!!!!!!!!!" << std::endl;
-        std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-
         // Low variance re-sampling		
 		double d_init_random_num = GaussianRandomGenerator(0., 1. / param_i_num_particle);
 		double d_accumlate_weight = egmat_particle_weight_->coeff(0, 0);
@@ -1358,11 +1323,11 @@ void LandmarkMatchingPF::GPSMeasurementUpdate(void)
     GpsData gps_gps;
 
     if(param_b_refernce_gps_novatel_){
-        gps_gps = gps_gps_raw_data_;
+        gps_gps = gps_gps_data_;
     }
     else
     {
-        gps_gps = gps_ublox_raw_data_;
+        gps_gps = gps_ublox_data_;
     }
 
     psstp_tmp_gps_enu = ConvertToMapFrame(gps_gps.latitude, gps_gps.longitude, gps_gps.height);
@@ -2046,9 +2011,6 @@ double LandmarkMatchingPF::ContourAreaCalc(std::vector<cv::Point> cv_point)
 double LandmarkMatchingPF::CheckPointsInsideContour(std::vector<cv::Point> cv_point, cv::Point2d cvp_check_point)
 {
     double d_check_inside_contour = cv::pointPolygonTest(cv_point, cvp_check_point, false);
-    // 1: inside contour
-    // 0: outside contour
-    // -1: on the contour
     return d_check_inside_contour;
 }
 
@@ -2381,8 +2343,6 @@ geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToMapFrame(float f_lat, fl
 
     double d_ref_latitude_deg = 37.3962732790;
     double d_ref_longitude_deg = 127.1066872418;
-    // double d_ref_latitude_deg = gps_first_gps_data.latitude;
-    // double d_ref_longitude_deg = gps_first_gps_data.longitude;
 
     f_hgt = d_map_height_;
 
@@ -2438,7 +2398,7 @@ void LandmarkMatchingPF::SaveResultText(Eigen::MatrixXd* input, std::string math
     {
         resultText  <<std::to_string(time)<< ", "<<mathcingType<<", "<<std::to_string(idxPar)<<", "<<std::to_string(egmat_timestamped_particle_state_->coeff(idxPar, 0))<<", "<<std::to_string(egmat_timestamped_particle_state_->coeff(idxPar, 1))
                     << ", "<<std::to_string(egmat_timestamped_particle_state_->coeff(idxPar, 2))<<", "<<std::to_string(psstp_gnss_enu_pose_.pose.position.x)<<", "<<std::to_string(psstp_gnss_enu_pose_.pose.position.y)
-                    << ", "<<std::to_string(gps_gps_raw_data_.yaw) << ", "<< std::to_string(input->coeff(idxPar, 0))<<"\n";
+                    << ", "<<std::to_string(gps_gps_data_.yaw) << ", "<< std::to_string(input->coeff(idxPar, 0))<<"\n";
     }
         
     i_frame_count++;

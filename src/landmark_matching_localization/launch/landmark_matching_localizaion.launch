@@ -11,12 +11,12 @@
         <!-- PARTICLE FILTER -->
 
         <!-- SELECT MEASUREMENT UPDATE METHOD -->
-        <param name="param_b_localization_type_point_cloud_map_matching_" value="false"/>
-        <param name="param_b_localization_type_spc_image_matching_" value="true"/>
+        <param name="param_b_localization_type_point_cloud_map_matching_" value="true"/>
+        <param name="param_b_localization_type_spc_image_matching_" value="false"/>
         <param name="param_b_localization_type_gps_" value="false"/>
 
         <!-- FAULT DETECTION -->
-        <param name="param_b_refernce_gps_novatel_" value="false"/>
+        <param name="param_b_refernce_gps_novatel_" value="true"/>
 
         <param name="param_d_gnss_position_quality_threshold_m_" value="1000.0"/>
         <param name="param_d_gnss_fault_position_threshold_m_" value="10.0"/>
@@ -31,7 +31,7 @@
             <param name="param_i_visualize_particle_index_" value="-1"/>
 
             <!-- PARTICLE FILTER -->
-            <param name="param_i_num_particle" value="100"/>
+            <!-- <param name="param_i_num_particle" value="100"/>
             <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
             <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
             <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
@@ -39,7 +39,7 @@
             <param name="param_d_north_sigma_m_" value="0.01"/>
             <param name="param_d_heading_sigma_deg_" value="0.05"/>
             <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
-            <param name="param_d_resampling_coefficent_" value="0.66"/>
+            <param name="param_d_resampling_coefficent_" value="0.66"/> -->
 
             <param name="param_d_pole_likelihood_thresholde_" value="35"/>
             <param name="param_d_traffic_sign_likelihood_thresholde_" value="35"/>
@@ -52,35 +52,35 @@
             <param name="param_d_fence_likelihood_threshold_" value="35.0"/>
 
             <!-- SEMANTIC POINT CLOUD CROPPING AREA -->
-            <param name="param_d_lane_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_lane_max_x_roi_m_" value="20.0"/>
-            <param name="param_d_lane_min_y_roi_m_" value="-5.0"/>
-            <param name="param_d_lane_max_y_roi_m_" value="6.0"/>
+            <param name="param_d_lane_min_x_m_" value="5.0"/>
+            <param name="param_d_lane_max_x_m_" value="20.0"/>
+            <param name="param_d_lane_min_y_m_" value="-5.0"/>
+            <param name="param_d_lane_max_y_m_" value="6.0"/>
 
-            <param name="param_d_building_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_building_max_x_roi_m_" value="30.0"/>
-            <param name="param_d_building_min_y_roi_m_" value="-10.0"/>
-            <param name="param_d_building_max_y_roi_m_" value="10.0"/>
+            <param name="param_d_building_min_x_m_" value="5.0"/>
+            <param name="param_d_building_max_x_m_" value="30.0"/>
+            <param name="param_d_building_min_y_m_" value="-10.0"/>
+            <param name="param_d_building_max_y_m_" value="10.0"/>
 
-            <param name="param_d_fence_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_fence_max_x_roi_m_" value="15.0"/>
-            <param name="param_d_fence_min_y_roi_m" value="-8.0"/>
-            <param name="param_d_fence_max_y_roi_m_" value="8.0"/>
+            <param name="param_d_fence_min_x_m_" value="5.0"/>
+            <param name="param_d_fence_max_x_m_" value="15.0"/>
+            <param name="param_d_fence_min_y_m" value="-8.0"/>
+            <param name="param_d_fence_max_y_m_" value="8.0"/>
 
-            <param name="param_d_tunnel_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_tunnel_max_x_roi_m_" value="20.0"/>
-            <param name="param_d_tunnel_min_y_roi_m_" value="-4.0"/>
-            <param name="param_d_tunnel_max_y_roi_m_" value="4.0"/>
+            <param name="param_d_tunnel_min_x_m_" value="5.0"/>
+            <param name="param_d_tunnel_max_x_m_" value="20.0"/>
+            <param name="param_d_tunnel_min_y_m_" value="-4.0"/>
+            <param name="param_d_tunnel_max_y_m_" value="4.0"/>
 
-            <param name="param_d_traffic_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_traffic_max_x_roi_m_" value="30.0"/>
-            <param name="param_d_traffic_min_y_roi_m_" value="-9.0"/>
-            <param name="param_d_traffic_max_y_roi_m_" value="9.0"/>
+            <param name="param_d_traffic_min_x_m_" value="5.0"/>
+            <param name="param_d_traffic_max_x_m_" value="30.0"/>
+            <param name="param_d_traffic_min_y_m_" value="-9.0"/>
+            <param name="param_d_traffic_max_y_m_" value="9.0"/>
 
-            <param name="param_d_pole_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_pole_max_x_roi_m_" value="15.0"/>
-            <param name="param_d_pole_min_y_roi_m_" value="-10.0"/>
-            <param name="param_d_pole_max_y_roi_m_" value="10.0"/>
+            <param name="param_d_pole_min_x_m_" value="5.0"/>
+            <param name="param_d_pole_max_x_m_" value="15.0"/>
+            <param name="param_d_pole_min_y_m_" value="-10.0"/>
+            <param name="param_d_pole_max_y_m_" value="10.0"/>
             
             <!-- POINT CLOUD SAMPLING NUM -->
             <param name="param_i_num_sampling_building_" value="0"/>
@@ -111,6 +111,35 @@
                 <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
                 <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
                 <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/> -->
+
+
+        <!-- POINT CLOUD MAP MATHCING -->
+            <!-- PARTICLE FILTER -->
+            <param name="param_i_num_particle" value="100"/>
+            <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
+            <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
+            <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
+            <param name="param_d_east_sigma_m_" value="0.08"/>
+            <param name="param_d_north_sigma_m_" value="0.08"/>
+            <param name="param_d_heading_sigma_deg_" value="0.1"/>
+            <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
+            <param name="param_d_resampling_coefficent_" value="0.66"/>
+
+            <!-- POINT CLOUD MAP SETTING -->
+            <param name="param_i_num_map_matching_random_sample_point_" value="100"/>
+            <param name="param_d_map_noise_measure_noise_sigma_m_" value="0.5"/>
+            <param name="param_d_map_sigma_" value="0.5"/>
+
+        <!-- IMAGE SPC & POINT CLOUD MATCHING -->
+        <!-- <param name="param_i_num_particle" value="100"/>
+        <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
+        <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
+        <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
+        <param name="param_d_east_sigma_m_" value="0.05"/>
+        <param name="param_d_north_sigma_m_" value="0.05"/>
+        <param name="param_d_heading_sigma_deg_" value="0.05"/>
+        <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
+        <param name="param_d_resampling_coefficent_" value="0.66"/> -->
         
     </node>
 
@@ -126,6 +155,7 @@
         <param name="param_str_pcd_file_path_" value="$(find landmark_matching_localization)/map/Track_A_colorized_global_downsample.pcd"/><!--test_downsampled_reaf0-5.pcd -->
         <param name="param_d_roi_x_boundary_length_m_" value="8.0"/>
         <param name="param_d_roi_y_boundary_length_m_" value="8.0"/>
+        <param name="param_DEBUG_MODE_" value="0"/>
         <param name="_HEIGHT_MIN_CHECKER" value="true"/>
         <param name="param_height_detection_type_minimum_" value="0.5"/>
     </node>
