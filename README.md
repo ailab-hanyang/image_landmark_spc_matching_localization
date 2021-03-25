@@ -4,7 +4,7 @@
 
 ### Package Install
 ```
-git clone 
+git clone https://github.com/soyeongkim/image_landmark_spc_matching_localization.git
 cd image_landmark_spc_matching_localization
 catkin_make
 source devel/setup.bash
