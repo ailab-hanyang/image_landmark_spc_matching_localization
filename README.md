@@ -2,7 +2,6 @@
 
 ---------------------------------------------------------------------
 
-## 0. How to use
 ### Package Install
 ```
 git clone 
@@ -10,6 +9,7 @@ cd image_landmark_spc_matching_localization
 catkin_make
 source devel/setup.bash
 ```
+---------------------------------------------------------------------
 #### Run the demo
 ##### 1. GPS based Localization
 ```
