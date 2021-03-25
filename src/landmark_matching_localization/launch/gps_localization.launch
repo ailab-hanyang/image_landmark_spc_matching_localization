@@ -12,8 +12,8 @@
 
         <!-- SELECT MEASUREMENT UPDATE METHOD -->
         <param name="param_b_localization_type_point_cloud_map_matching_" value="false"/>
-        <param name="param_b_localization_type_spc_image_matching_" value="true"/>
-        <param name="param_b_localization_type_gps_" value="false"/>
+        <param name="param_b_localization_type_spc_image_matching_" value="false"/>
+        <param name="param_b_localization_type_gps_" value="true"/>
 
         <!-- FAULT DETECTION -->
         <param name="param_b_refernce_gps_novatel_" value="true"/>
@@ -31,7 +31,7 @@
             <param name="param_i_visualize_particle_index_" value="-1"/>
 
             <!-- PARTICLE FILTER -->
-            <param name="param_i_num_particle" value="100"/>
+            <!-- <param name="param_i_num_particle" value="100"/>
             <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
             <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
             <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
@@ -39,7 +39,7 @@
             <param name="param_d_north_sigma_m_" value="0.01"/>
             <param name="param_d_heading_sigma_deg_" value="0.05"/>
             <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
-            <param name="param_d_resampling_coefficent_" value="0.66"/>
+            <param name="param_d_resampling_coefficent_" value="0.66"/> -->
 
             <param name="param_d_pole_likelihood_thresholde_" value="35"/>
             <param name="param_d_traffic_sign_likelihood_thresholde_" value="35"/>
@@ -115,7 +115,7 @@
 
         <!-- POINT CLOUD MAP MATHCING -->
             <!-- PARTICLE FILTER -->
-            <!-- <param name="param_i_num_particle" value="100"/>
+            <param name="param_i_num_particle" value="100"/>
             <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
             <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
             <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
@@ -123,7 +123,7 @@
             <param name="param_d_north_sigma_m_" value="0.08"/>
             <param name="param_d_heading_sigma_deg_" value="0.1"/>
             <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
-            <param name="param_d_resampling_coefficent_" value="0.66"/> -->
+            <param name="param_d_resampling_coefficent_" value="0.66"/>
 
             <!-- POINT CLOUD MAP SETTING -->
             <param name="param_i_num_map_matching_random_sample_point_" value="100"/>
