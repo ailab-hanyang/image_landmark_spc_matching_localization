@@ -1,0 +1,8 @@
+*.a
+!lib.a
+build/
+devel/
+log/
+.vscode/
+.catkin_tools/
+*/map/*
