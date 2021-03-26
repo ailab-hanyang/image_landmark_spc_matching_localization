@@ -9,9 +9,6 @@ cd image_landmark_spc_matching_localization
 catkin_make
 source devel/setup.bash
 ```
-
-##### Download Semantic Point Cloud Example
-You can download semantic point cloud map example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ksy4200_konkuk_ac_kr/EbZDFZBC7B1OnEJCjov5b9kBhQYyz-_SEbcxMEQ7Tt9JwQ?e=HO9JwO . Put this file at src/landmark_matching_localization/map .
 ---------------------------------------------------------------------
 #### Run the demo
 ##### 1. GPS based Localization
@@ -40,3 +37,7 @@ source devel/setup.bash
 source devel/setup.bash
 roslaunch darknet_ros darknet_ros.launch
 ```
+
+##### Download Semantic Point Cloud Example
+
+You can download semantic point cloud map example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ksy4200_konkuk_ac_kr/EbZDFZBC7B1OnEJCjov5b9kBhQYyz-_SEbcxMEQ7Tt9JwQ?e=HO9JwO . Put this file at src/landmark_matching_localization/map .
