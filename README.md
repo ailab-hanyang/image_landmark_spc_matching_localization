@@ -44,12 +44,12 @@ roslaunch landmark_matching_localization landmark_matching_localizaion.launch
 2. Image Segmentation AI
 ```
 source devel/setup.bash
-rosrun deeplab_ros inference_
+rosrun deeplab_ros inference_deeplab.py
 ```
 3. Image Detection AI
 ```
 source devel/setup.bash
-rosrun deeplab_ros inference_deeplab.py 
+rosrun darknet_ros darknet_ros.launch
 ```
 
 #### Download Semantic Point Cloud Example
