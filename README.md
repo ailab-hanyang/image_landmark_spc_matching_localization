@@ -17,11 +17,12 @@ source devel/setup.bash
 #### Dependencies
 
 This software is build on ROS(Robotic Operating System).
+Additionaly, it also requires the following libraries.
  - OpenCV
  - OpenCL
- - CU DNN
- - CUDA 10.1
- - Python 3
+ - cuDNN
+ - CUDA (recommand version 10.1)
+ - Python (recommand version 3.5, 3.7)
 ---------------------------------------------------------------------
 #### Run the demo
 ##### 1. GPS based Localization
