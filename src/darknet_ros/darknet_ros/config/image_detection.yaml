@@ -1,0 +1,16 @@
+yolo_model:
+
+  config_file:
+    name: image_detection.cfg
+  weight_file:
+    name: image_detection.weights
+  threshold:
+    value: 0.3
+  detection_classes:
+    names:
+      - Column & Tree
+      - Traffic Signs
+      - Traffic Light
+      - Tunnel Fan
+      - Tunnel Fire Hydrant
+      - Tunnel Emergency Light
