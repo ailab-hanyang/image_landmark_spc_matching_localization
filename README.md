@@ -14,6 +14,15 @@ catkin_make --cmake-args \
 source devel/setup.bash
 ```
 ---------------------------------------------------------------------
+#### Dependencies
+
+This software is build on ROS(Robotic Operating System).
+ - OpenCV
+ - OpenCL
+ - CU DNN
+ - CUDA 10.1
+ - Python 3
+---------------------------------------------------------------------
 #### Run the demo
 ##### 1. GPS based Localization
 ```
@@ -35,11 +44,12 @@ roslaunch landmark_matching_localization landmark_matching_localizaion.launch
 2. Image Segmentation AI
 ```
 source devel/setup.bash
+rosrun deeplab_ros inference_
 ```
 3. Image Detection AI
 ```
 source devel/setup.bash
-roslaunch darknet_ros darknet_ros.launch
+rosrun deeplab_ros inference_deeplab.py 
 ```
 
 ##### Download Semantic Point Cloud Example
