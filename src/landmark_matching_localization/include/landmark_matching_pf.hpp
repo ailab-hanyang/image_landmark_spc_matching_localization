@@ -228,7 +228,6 @@ class LandmarkMatchingPF
         bool param_b_polygon_view_on_;
         bool param_b_segmented_view_on_;
 
-        bool m_cfg_bSPCImageMatchingDebuggingMode;
         int i_frame_count;
         int param_i_visualize_particle_index_;
         
@@ -247,35 +246,35 @@ class LandmarkMatchingPF
         int param_i_num_sampling_tunnel_light_;
         int param_i_num_sampling_tunnel_hydrant_;
 
-        double param_d_lane_min_x_m_;
-        double param_d_lane_max_x_m_;
-        double param_d_lane_min_y_m_;
-        double param_d_lane_max_y_m_;
+        double param_d_lane_min_x_roi_m_;
+        double param_d_lane_max_x_roi_m_;
+        double param_d_lane_min_y_roi_m_;
+        double param_d_lane_max_y_roi_m_;
 
-        double param_d_building_min_x_m_;
-        double param_d_building_max_x_m_;
-        double param_d_building_min_y_m_;
-        double param_d_building_max_y_m_;
+        double param_d_building_min_x_roi_m_;
+        double param_d_building_max_x_roi_m_;
+        double param_d_building_min_y_roi_m_;
+        double param_d_building_max_y_roi_m_;
 
-        double param_d_fence_min_x_m_;
-        double param_d_fence_max_x_m_;
-        double param_d_fence_min_y_m;
-        double param_d_fence_max_y_m_;
+        double param_d_fence_min_x_roi_m_;
+        double param_d_fence_max_x_roi_m_;
+        double param_d_fence_min_y_roi_m_;
+        double param_d_fence_max_y_roi_m_;
 
-        double param_d_tunnel_min_x_m_;
-        double param_d_tunnel_max_x_m_;
-        double param_d_tunnel_min_y_m_;
-        double param_d_tunnel_max_y_m_;
+        double param_d_tunnel_min_x_roi_m_;
+        double param_d_tunnel_max_x_roi_m_;
+        double param_d_tunnel_min_y_roi_m_;
+        double param_d_tunnel_max_y_roi_m_;
 
-        double param_d_traffic_min_x_m_;
-        double param_d_traffic_max_x_m_;
-        double param_d_traffic_min_y_m_;
-        double param_d_traffic_max_y_m_;
+        double param_d_traffic_min_x_roi_m_;
+        double param_d_traffic_max_x_roi_m_;
+        double param_d_traffic_min_y_roi_m_;
+        double param_d_traffic_max_y_roi_m_;
 
-        double param_d_pole_min_x_m_;
-        double param_d_pole_max_x_m_;
-        double param_d_pole_min_y_m_;
-        double param_d_pole_max_y_m_;
+        double param_d_pole_min_x_roi_m_;
+        double param_d_pole_max_x_roi_m_;
+        double param_d_pole_min_y_roi_m_;
+        double param_d_pole_max_y_roi_m_;
 
         double param_d_pole_likelihood_thresholde_;
         double param_d_traffic_sign_likelihood_thresholde_;

@@ -105,35 +105,35 @@ void LandmarkMatchingPF::GetParameter()
     nh.getParam("/landmark_matching_pf/param_d_map_noise_measure_noise_sigma_m_" , param_d_map_noise_measure_noise_sigma_m_);
     nh.getParam("/landmark_matching_pf/param_d_map_sigma_" , param_d_map_sigma_);
 
-    nh.getParam("/landmark_matching_pf/param_d_lane_min_x_m_"         , param_d_lane_min_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_lane_max_x_m_"         , param_d_lane_max_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_lane_min_y_m_"         , param_d_lane_min_y_m_);
-    nh.getParam("/landmark_matching_pf/param_d_lane_max_y_m_"         , param_d_lane_max_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_min_x_roi_m_"         , param_d_lane_min_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_max_x_roi_m_"         , param_d_lane_max_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_min_y_roi_m_"         , param_d_lane_min_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_lane_max_y_roi_m_"         , param_d_lane_max_y_roi_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_building_min_x_m_"         , param_d_building_min_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_building_max_x_m_"         , param_d_building_max_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_building_min_y_m_"         , param_d_building_min_y_m_);
-    nh.getParam("/landmark_matching_pf/param_d_building_max_y_m_"         , param_d_building_max_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_min_x_roi_m_"         , param_d_building_min_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_max_x_roi_m_"         , param_d_building_max_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_min_y_roi_m_"         , param_d_building_min_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_building_max_y_roi_m_"         , param_d_building_max_y_roi_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_fence_min_x_m_"         , param_d_fence_min_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_fence_max_x_m_"         , param_d_fence_max_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_fence_min_y_m"         , param_d_fence_min_y_m);
-    nh.getParam("/landmark_matching_pf/param_d_fence_max_y_m_"         , param_d_fence_max_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_min_x_roi_m_"         , param_d_fence_min_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_max_x_roi_m_"         , param_d_fence_max_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_min_y_roi_m_"         , param_d_fence_min_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_fence_max_y_roi_m_"         , param_d_fence_max_y_roi_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_x_m_"         , param_d_tunnel_min_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_x_m_"         , param_d_tunnel_max_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_y_m_"         , param_d_tunnel_min_y_m_);
-    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_y_m_"         , param_d_tunnel_max_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_x_roi_m_"         , param_d_tunnel_min_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_x_roi_m_"         , param_d_tunnel_max_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_min_y_roi_m_"         , param_d_tunnel_min_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_tunnel_max_y_roi_m_"         , param_d_tunnel_max_y_roi_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_traffic_min_x_m_"         , param_d_traffic_min_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_traffic_max_x_m_"         , param_d_traffic_max_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_traffic_min_y_m_"         , param_d_traffic_min_y_m_);
-    nh.getParam("/landmark_matching_pf/param_d_traffic_max_y_m_"         , param_d_pole_max_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_min_x_roi_m_"         , param_d_traffic_min_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_max_x_roi_m_"         , param_d_traffic_max_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_min_y_roi_m_"         , param_d_traffic_min_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_traffic_max_y_roi_m_"         , param_d_pole_max_y_roi_m_);
 
-    nh.getParam("/landmark_matching_pf/param_d_pole_min_x_m_"         , param_d_pole_min_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_pole_max_x_m_"         , param_d_pole_max_x_m_);
-    nh.getParam("/landmark_matching_pf/param_d_pole_min_y_m_"         , param_d_pole_min_y_m_);
-    nh.getParam("/landmark_matching_pf/param_d_pole_max_y_m_"         , param_d_pole_max_y_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_min_x_roi_m_"         , param_d_pole_min_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_max_x_roi_m_"         , param_d_pole_max_x_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_min_y_roi_m_"         , param_d_pole_min_y_roi_m_);
+    nh.getParam("/landmark_matching_pf/param_d_pole_max_y_roi_m_"         , param_d_pole_max_y_roi_m_);
 
     nh.getParam("/landmark_matching_pf/param_d_extrinsic_calibration_roll_deg_"         , param_d_extrinsic_calibration_roll_deg_);
     nh.getParam("/landmark_matching_pf/param_d_extrinsic_calibration_pitch_deg_"         , param_d_extrinsic_calibration_pitch_deg_);
@@ -159,8 +159,6 @@ void LandmarkMatchingPF::GetParameter()
     nh.getParam("/landmark_matching_pf/param_d_gnss_fault_heading_threshold_deg_", param_d_gnss_fault_heading_threshold_deg_);
 
     nh.getParam("/landmark_matching_pf/param_b_semantic_map_use_", param_b_semantic_map_use_); // true: Sementic map , false: normal map
-
-    nh.getParam("/landmark_matching_pf/m_cfg_bSPCImageMatchingDebuggingMode", m_cfg_bSPCImageMatchingDebuggingMode);
 
     nh.getParam("/landmark_matching_pf/param_i_num_sampling_building_", param_i_num_sampling_building_); 
     nh.getParam("/landmark_matching_pf/param_i_num_sampling_fence_", param_i_num_sampling_fence_); 
@@ -272,18 +270,6 @@ void LandmarkMatchingPF::Run(){
     
     if(param_b_localization_type_spc_image_matching_)
     {
-        if(m_cfg_bSPCImageMatchingDebuggingMode)
-        {
-            Eigen::MatrixXd egmat_init_state(param_i_num_particle,i_num_of_state_);
-            for(int idx_particle = 0; idx_particle<param_i_num_particle;idx_particle++)
-            {
-                egmat_init_state(idx_particle, 0) = psstp_gnss_enu_pose_.pose.position.x;
-                egmat_init_state(idx_particle, 1) = psstp_gnss_enu_pose_.pose.position.y;
-                egmat_init_state(idx_particle, 2) = gps_gps_data_.yaw;
-            }
-            *egmat_timestamped_particle_state_ = egmat_init_state;
-        }
-
         std::vector<cv::Point2d> vec_ref_position_point_projected_image;
 
         auto t1 = std::chrono::high_resolution_clock::now();
@@ -413,88 +399,88 @@ void LandmarkMatchingPF::CallBackGlobalSemanticPointCloudMap(const sensor_msgs::
 
         if(rgb_points.r == 255 && rgb_points.g == 200 && rgb_points.b ==   0){ // str_building
 
-            if(rgb_points.x>param_d_building_min_x_m_ && rgb_points.x<param_d_building_max_x_m_ 
-                && rgb_points.y>param_d_building_min_y_m_ && rgb_points.y<param_d_building_max_y_m_)
+            if(rgb_points.x>param_d_building_min_x_roi_m_ && rgb_points.x<param_d_building_max_x_roi_m_ 
+                && rgb_points.y>param_d_building_min_y_roi_m_ && rgb_points.y<param_d_building_max_y_roi_m_)
             {
                 pcptr_building_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r ==   7 && rgb_points.g == 249 && rgb_points.b == 184){ // str_building
 
-            if(rgb_points.x>param_d_building_min_x_m_ && rgb_points.x<param_d_building_max_x_m_ 
-                && rgb_points.y>param_d_building_min_y_m_ && rgb_points.y<param_d_building_max_y_m_)
+            if(rgb_points.x>param_d_building_min_x_roi_m_ && rgb_points.x<param_d_building_max_x_roi_m_ 
+                && rgb_points.y>param_d_building_min_y_roi_m_ && rgb_points.y<param_d_building_max_y_roi_m_)
             {
                 pcptr_building_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 255 && rgb_points.g == 120 && rgb_points.b ==  50){ // str_fence
 
-            if(rgb_points.x>param_d_fence_min_x_m_ && rgb_points.x<param_d_fence_max_x_m_ 
-                && rgb_points.y>param_d_fence_min_y_m && rgb_points.y<param_d_fence_max_y_m_)
+            if(rgb_points.x>param_d_fence_min_x_roi_m_ && rgb_points.x<param_d_fence_max_x_roi_m_ 
+                && rgb_points.y>param_d_fence_min_y_roi_m_ && rgb_points.y<param_d_fence_max_y_roi_m_)
             {
                 pcptr_fence_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 150 && rgb_points.g == 255 && rgb_points.b == 170){ // lane marking
 
-            if(rgb_points.x>param_d_lane_min_x_m_ && rgb_points.x<param_d_lane_max_x_m_ 
-                && rgb_points.y>param_d_lane_min_y_m_ && rgb_points.y<param_d_lane_max_y_m_)
+            if(rgb_points.x>param_d_lane_min_x_roi_m_ && rgb_points.x<param_d_lane_max_x_roi_m_ 
+                && rgb_points.y>param_d_lane_min_y_roi_m_ && rgb_points.y<param_d_lane_max_y_roi_m_)
             {
                 pcptr_lane_marking_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 135 && rgb_points.g ==  60 && rgb_points.b ==   0){ // trunk
 
-            if(rgb_points.x>param_d_pole_min_x_m_ && rgb_points.x<param_d_pole_max_x_m_ 
-                && rgb_points.y>param_d_pole_min_y_m_ && rgb_points.y<param_d_pole_max_y_m_)
+            if(rgb_points.x>param_d_pole_min_x_roi_m_ && rgb_points.x<param_d_pole_max_x_roi_m_ 
+                && rgb_points.y>param_d_pole_min_y_roi_m_ && rgb_points.y<param_d_pole_max_y_roi_m_)
             {
                 pcptr_pole_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 255 && rgb_points.g == 240 && rgb_points.b == 150){ // str_pole
 
-            if(rgb_points.x>param_d_pole_min_x_m_ && rgb_points.x<param_d_pole_max_x_m_ 
-                && rgb_points.y>param_d_pole_min_y_m_ && rgb_points.y<param_d_pole_max_y_m_)
+            if(rgb_points.x>param_d_pole_min_x_roi_m_ && rgb_points.x<param_d_pole_max_x_roi_m_ 
+                && rgb_points.y>param_d_pole_min_y_roi_m_ && rgb_points.y<param_d_pole_max_y_roi_m_)
             {
                 pcptr_pole_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 255 && rgb_points.g ==   0 && rgb_points.b ==   0){ // traffic sign
 
-            if(rgb_points.x>param_d_traffic_min_x_m_ && rgb_points.x<param_d_traffic_max_x_m_ 
-                && rgb_points.y>param_d_traffic_min_y_m_ && rgb_points.y<param_d_traffic_max_y_m_)
+            if(rgb_points.x>param_d_traffic_min_x_roi_m_ && rgb_points.x<param_d_traffic_max_x_roi_m_ 
+                && rgb_points.y>param_d_traffic_min_y_roi_m_ && rgb_points.y<param_d_traffic_max_y_roi_m_)
             {
                 pcptr_traffic_sign_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r ==   0 && rgb_points.g ==   0 && rgb_points.b == 255){ // traffic light
 
-            if(rgb_points.x>param_d_traffic_min_x_m_ && rgb_points.x<param_d_traffic_max_x_m_ 
-                && rgb_points.y>param_d_traffic_min_y_m_ && rgb_points.y<param_d_traffic_max_y_m_)
+            if(rgb_points.x>param_d_traffic_min_x_roi_m_ && rgb_points.x<param_d_traffic_max_x_roi_m_ 
+                && rgb_points.y>param_d_traffic_min_y_roi_m_ && rgb_points.y<param_d_traffic_max_y_roi_m_)
             {
                 pcptr_traffic_light_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r ==   0 && rgb_points.g == 100 && rgb_points.b ==  80){ // tunnel fan
 
-            if(rgb_points.x>param_d_tunnel_min_x_m_ && rgb_points.x<param_d_tunnel_max_x_m_ 
-                && rgb_points.y>param_d_tunnel_min_y_m_ && rgb_points.y<param_d_tunnel_max_y_m_)
+            if(rgb_points.x>param_d_tunnel_min_x_roi_m_ && rgb_points.x<param_d_tunnel_max_x_roi_m_ 
+                && rgb_points.y>param_d_tunnel_min_y_roi_m_ && rgb_points.y<param_d_tunnel_max_y_roi_m_)
             {
                 pcptr_tunnel_fan_point_cluod->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 174 && rgb_points.g ==  95 && rgb_points.b == 137){ // tunnel light
 
-            if(rgb_points.x>param_d_tunnel_min_x_m_ && rgb_points.x<param_d_tunnel_max_x_m_ 
-                && rgb_points.y>param_d_tunnel_min_y_m_ && rgb_points.y<param_d_tunnel_max_y_m_)
+            if(rgb_points.x>param_d_tunnel_min_x_roi_m_ && rgb_points.x<param_d_tunnel_max_x_roi_m_ 
+                && rgb_points.y>param_d_tunnel_min_y_roi_m_ && rgb_points.y<param_d_tunnel_max_y_roi_m_)
             {
                 pcptr_tunnel_light_point_cloud->points.push_back(rgb_points);
             }
         }
         else if(rgb_points.r == 171 && rgb_points.g ==   0 && rgb_points.b == 255){ // tunnel hydrant
 
-            if(rgb_points.x>param_d_tunnel_min_x_m_ && rgb_points.x<param_d_tunnel_max_x_m_ 
-                && rgb_points.y>param_d_tunnel_min_y_m_ && rgb_points.y<param_d_tunnel_max_y_m_)
+            if(rgb_points.x>param_d_tunnel_min_x_roi_m_ && rgb_points.x<param_d_tunnel_max_x_roi_m_ 
+                && rgb_points.y>param_d_tunnel_min_y_roi_m_ && rgb_points.y<param_d_tunnel_max_y_roi_m_)
             {
                 pcptr_tunnel_hydrant_point_cloud->points.push_back(rgb_points);
             }

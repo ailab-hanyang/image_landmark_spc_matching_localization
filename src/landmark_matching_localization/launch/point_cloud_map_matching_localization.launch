@@ -23,7 +23,6 @@
         <param name="param_d_gnss_fault_heading_threshold_deg_" value="1000.0"/>
 
         <!-- IMAGE SPC MATCHING -->
-        <param name="m_cfg_bSPCImageMatchingDebuggingMode" value="false"/>
 
             <!-- VISUALIZE MODE -->
             <param name="param_b_polygon_view_on_" value="true"/>
@@ -52,35 +51,35 @@
             <param name="param_d_fence_likelihood_threshold_" value="35.0"/>
 
             <!-- SEMANTIC POINT CLOUD CROPPING AREA -->
-            <param name="param_d_lane_min_x_m_" value="5.0"/>
-            <param name="param_d_lane_max_x_m_" value="20.0"/>
-            <param name="param_d_lane_min_y_m_" value="-5.0"/>
-            <param name="param_d_lane_max_y_m_" value="6.0"/>
+            <param name="param_d_lane_min_x_roi_m_" value="5.0"/>
+            <param name="param_d_lane_max_x_roi_m_" value="20.0"/>
+            <param name="param_d_lane_min_y_roi_m_" value="-5.0"/>
+            <param name="param_d_lane_max_y_roi_m_" value="6.0"/>
 
-            <param name="param_d_building_min_x_m_" value="5.0"/>
-            <param name="param_d_building_max_x_m_" value="30.0"/>
-            <param name="param_d_building_min_y_m_" value="-10.0"/>
-            <param name="param_d_building_max_y_m_" value="10.0"/>
+            <param name="param_d_building_min_x_roi_m_" value="5.0"/>
+            <param name="param_d_building_max_x_roi_m_" value="30.0"/>
+            <param name="param_d_building_min_y_roi_m_" value="-10.0"/>
+            <param name="param_d_building_max_y_roi_m_" value="10.0"/>
 
-            <param name="param_d_fence_min_x_m_" value="5.0"/>
-            <param name="param_d_fence_max_x_m_" value="15.0"/>
-            <param name="param_d_fence_min_y_m" value="-8.0"/>
-            <param name="param_d_fence_max_y_m_" value="8.0"/>
+            <param name="param_d_fence_min_x_roi_m_" value="5.0"/>
+            <param name="param_d_fence_max_x_roi_m_" value="15.0"/>
+            <param name="param_d_fence_min_y_roi_m_" value="-8.0"/>
+            <param name="param_d_fence_max_y_roi_m_" value="8.0"/>
 
-            <param name="param_d_tunnel_min_x_m_" value="5.0"/>
-            <param name="param_d_tunnel_max_x_m_" value="20.0"/>
-            <param name="param_d_tunnel_min_y_m_" value="-4.0"/>
-            <param name="param_d_tunnel_max_y_m_" value="4.0"/>
+            <param name="param_d_tunnel_min_x_roi_m_" value="5.0"/>
+            <param name="param_d_tunnel_max_x_roi_m_" value="20.0"/>
+            <param name="param_d_tunnel_min_y_roi_m_" value="-4.0"/>
+            <param name="param_d_tunnel_max_y_roi_m_" value="4.0"/>
 
-            <param name="param_d_traffic_min_x_m_" value="5.0"/>
-            <param name="param_d_traffic_max_x_m_" value="30.0"/>
-            <param name="param_d_traffic_min_y_m_" value="-9.0"/>
-            <param name="param_d_traffic_max_y_m_" value="9.0"/>
+            <param name="param_d_traffic_min_x_roi_m_" value="5.0"/>
+            <param name="param_d_traffic_max_x_roi_m_" value="30.0"/>
+            <param name="param_d_traffic_min_y_roi_m_" value="-9.0"/>
+            <param name="param_d_traffic_max_y_roi_m_" value="9.0"/>
 
-            <param name="param_d_pole_min_x_m_" value="5.0"/>
-            <param name="param_d_pole_max_x_m_" value="15.0"/>
-            <param name="param_d_pole_min_y_m_" value="-10.0"/>
-            <param name="param_d_pole_max_y_m_" value="10.0"/>
+            <param name="param_d_pole_min_x_roi_m_" value="5.0"/>
+            <param name="param_d_pole_max_x_roi_m_" value="15.0"/>
+            <param name="param_d_pole_min_y_roi_m_" value="-10.0"/>
+            <param name="param_d_pole_max_y_roi_m_" value="10.0"/>
             
             <!-- POINT CLOUD SAMPLING NUM -->
             <param name="param_i_num_sampling_building_" value="0"/>
