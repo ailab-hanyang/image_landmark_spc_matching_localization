@@ -14,7 +14,7 @@ catkin_make --cmake-args \
 source devel/setup.bash
 ```
 ---------------------------------------------------------------------
-#### Dependencies
+### Dependencies
 
 This software is build on ROS(Robotic Operating System).
 Additionaly, it also requires the following libraries.
@@ -24,16 +24,16 @@ Additionaly, it also requires the following libraries.
  - CUDA (recommand version 10.1)
  - Python (recommand version 3.5, 3.7)
 ---------------------------------------------------------------------
-#### Run the demo
-##### 1. GPS based Localization
+### Run the demo
+#### 1. GPS based Localization
 ```
 roslaunch landmark_matching_localization gps_localization.launch 
 ```
-##### 2. Point Cloud Map Matching Localization
+#### 2. Point Cloud Map Matching Localization
 ```
 roslaunch landmark_matching_localization map_matching_localization.launch 
 ```
-##### 3. Image Landmark and Semantic Point Cloud Map Matching Localization
+#### 3. Image Landmark and Semantic Point Cloud Map Matching Localization
 For using image landmark and semantic point cloud map matching localization, you have to run 3 launch files.
 (localization, image segmentation AI, image detection AI)
 
@@ -53,13 +53,13 @@ source devel/setup.bash
 rosrun darknet_ros darknet_ros.launch
 ```
 
-#### Download Semantic Point Cloud Example
+### Download Semantic Point Cloud Example
 
 You can download semantic point cloud map example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EWD-5vFFooNNjlrsSBbDGqgB6qHSD786wffZwWa2C8zB_A?e=0vTyMh. 
 
 Put this file at src/landmark_matching_localization/map.
 
-#### Download Yolo Weights Example
+### Download Yolo Weights Example
 
 You can download weights example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EVMou4zEG-dOt5KNdtkBj3MBBucZqrhVZxit-auWfwoGmQ?e=4R8Nsm .
 
