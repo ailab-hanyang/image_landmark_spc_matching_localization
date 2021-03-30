@@ -1,4 +1,4 @@
-# Image Landmark and Semantic Point Cloud Matching based Localization
+# Image Landmark and Semantic Point Cloud Map Matching based Localization
 
 ---------------------------------------------------------------------
 
