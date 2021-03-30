@@ -275,7 +275,7 @@ void LandmarkMatchingPF::Run(){
         auto t1 = std::chrono::high_resolution_clock::now();
         if((checker_b_image_contour_data_exist_ || checker_b_segmented_image_data_exist_)  && fabs(gps_gps_data_.vel_ms*3.6) > 3.0) 
         {
-            param_b_refernce_gps_novatel_ = false;
+            // param_b_refernce_gps_novatel_ = false;
 
             ParticlePointsTransformation();
             PointCloud2DProjection(pcptr_input_local_point_cloud_map_, egmat_lidar_vehicle_transform_, vec_ref_position_point_projected_image); // for visualization

@@ -12,7 +12,7 @@
 
         <!-- SELECT MEASUREMENT UPDATE METHOD -->
         <param name="param_b_localization_type_point_cloud_map_matching_" value="true"/>
-        <param name="param_b_localization_type_spc_image_matching_" value="false"/>
+        <param name="param_b_localization_type_spc_image_matching_" value="true"/>
         <param name="param_b_localization_type_gps_" value="false"/>
 
         <!-- FAULT DETECTION -->
@@ -102,24 +102,13 @@
 
 
         <!-- POINT CLOUD MAP MATHCING -->
-            <!-- PARTICLE FILTER -->
-            <param name="param_i_num_particle" value="100"/>
-            <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
-            <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
-            <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
-            <param name="param_d_east_sigma_m_" value="0.1"/>
-            <param name="param_d_north_sigma_m_" value="0.1"/>
-            <param name="param_d_heading_sigma_deg_" value="0.1"/>
-            <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
-            <param name="param_d_resampling_coefficent_" value="0.66"/>
-
             <!-- POINT CLOUD MAP SETTING -->
             <param name="param_i_num_map_matching_random_sample_point_" value="100"/>
             <param name="param_d_map_noise_measure_noise_sigma_m_" value="0.5"/>
             <param name="param_d_map_sigma_" value="0.5"/>
 
         <!-- IMAGE SPC & POINT CLOUD MATCHING -->
-        <!-- <param name="param_i_num_particle" value="100"/>
+        <param name="param_i_num_particle" value="100"/>
         <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
         <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
         <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
@@ -127,7 +116,7 @@
         <param name="param_d_north_sigma_m_" value="0.05"/>
         <param name="param_d_heading_sigma_deg_" value="0.05"/>
         <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
-        <param name="param_d_resampling_coefficent_" value="0.66"/> -->
+        <param name="param_d_resampling_coefficent_" value="0.66"/>
         
     </node>
 
