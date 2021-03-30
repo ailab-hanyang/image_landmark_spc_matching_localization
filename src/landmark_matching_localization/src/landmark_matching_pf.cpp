@@ -437,7 +437,7 @@ void LandmarkMatchingPF::CallBackGlobalSemanticPointCloudMap(const sensor_msgs::
                 pcptr_pole_point_cloud->points.push_back(rgb_points);
             }
         }
-        else if(rgb_points.r == 255 && rgb_points.g == 240 && rgb_points.b == 150){ // str_pole
+        else if(rgb_points.r == 255 && rgb_points.g == 240 && rgb_points.b == 150){ // pole
 
             if(rgb_points.x>param_d_pole_min_x_roi_m_ && rgb_points.x<param_d_pole_max_x_roi_m_ 
                 && rgb_points.y>param_d_pole_min_y_roi_m_ && rgb_points.y<param_d_pole_max_y_roi_m_)
@@ -681,7 +681,7 @@ void LandmarkMatchingPF::CallbackImageDetectionLabel(const landmark_matching_loc
             }
         }
 
-        vec_image_contour_point_pole_ = vec_image_contour_pole; // str_pole
+        vec_image_contour_point_pole_ = vec_image_contour_pole; // pole
         vec_image_contour_point_traffic_sign_ = vec_image_contour_traffic_sign; // traffic sign
         vec_image_contour_point_traffic_light_ = vec_image_contour_traffic_light; // traffic light
         vec_image_contour_point_tunnel_fan_ = vec_image_contour_tunnel_fan; // tunnel fan
@@ -2132,7 +2132,7 @@ void LandmarkMatchingPF::ReferenceImagePointAndCheckInsideViewer()
                                     3);
     }
 
-    std::string str_pole          = "Pole Score : "           + std::to_string(d_likelihood_pole);
+    std::string str_pole           = "Pole Score : "           + std::to_string(d_likelihood_pole);
     std::string str_traffic_sign   = "Traffic Sign Score : "   + std::to_string(d_likelihood_traffic_sign);
     std::string str_traffic_light  = "Traffic light Score : "  + std::to_string(d_likelihood_traffic_light);
     std::string str_tunnel_fan     = "Tunnel Fan Score : "     + std::to_string(d_likelihood_tunnel_fan);
@@ -2146,7 +2146,7 @@ void LandmarkMatchingPF::ReferenceImagePointAndCheckInsideViewer()
     cv::putText(cvmat_image_projection, str_tunnel_light,   cv::Point(40, cvmat_image_projection.rows-113), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0,0,255),   2);
     cv::putText(cvmat_image_projection, str_tunnel_hydrant, cv::Point(40, cvmat_image_projection.rows-138), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255,0,255), 2);
 
-    if(vec_image_contour_point_pole_.size() != 0) //str_pole
+    if(vec_image_contour_point_pole_.size() != 0) // pole
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_pole_, -1, CV_RGB(0,255,0),   2, 8);
     if(vec_image_contour_point_traffic_sign_.size() != 0) // traffic sign
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_traffic_sign_, -1, CV_RGB(255,255,0), 2, 8);
@@ -2225,7 +2225,7 @@ void LandmarkMatchingPF::ParticleImagePointViewer(std::vector<cv::Point2d> vec_i
 
     cv::putText(cvmat_image_projection, particleNum,   cv::Point(50, 30),                     cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0,0,0),     2);
 
-    if(vec_image_contour_point_pole_.size() != 0) //str_pole
+    if(vec_image_contour_point_pole_.size() != 0) // pole
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_pole_, -1, CV_RGB(0,255,0), 2, 8);
     if(vec_image_contour_point_traffic_sign_.size() != 0) // traffic sign
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_traffic_sign_, -1, CV_RGB(255,255,0), 2, 8);
