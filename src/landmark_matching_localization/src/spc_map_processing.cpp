@@ -31,8 +31,6 @@ SPCMapProcessing::SPCMapProcessing()
             m_rosNodeHandler.advertise<sensor_msgs::PointCloud2>("/global_map_RGB", i_buffer_size);
     rospub_map_pose_ =
             m_rosNodeHandler.advertise<geometry_msgs::Pose>("/map_height", 1);
-    rospub_local_map_ = 
-            m_rosNodeHandler.advertise<sensor_msgs::PointCloud2>("/local_map", 1);
     rospub_roi_map_ =
             m_rosNodeHandler.advertise<sensor_msgs::PointCloud2>("/roi_map", 1);
     rospub_roi_height_map_ = 

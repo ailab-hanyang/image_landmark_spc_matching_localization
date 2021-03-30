@@ -30,9 +30,9 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
     int i_map_msg_buffer_size = 1000;
 
     egmat_lidar_vehicle_transform_ << 1., 0., 0., 0., 
-                               0., 1., 0., 0., 
-                               0., 0., 1., 0.,
-                               0., 0., 0., 1.;
+                                    0., 1., 0., 0., 
+                                    0., 0., 1., 0.,
+                                    0., 0., 0., 1.;
 
     rossub_novatel_inspvax_           = nh.subscribe("/novatel/oem7/inspvax", i_buffer_size, &LandmarkMatchingPF::CallBackNovatelINSPVAX, this);
     rossub_novatel_corrimu_           = nh.subscribe("/novatel/oem7/corrimu", i_buffer_size, &LandmarkMatchingPF::CallBackNovatelCORRIMU, this);
@@ -69,7 +69,7 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
     rospub_gps_quality_              = nh.advertise<std_msgs::String>("/strmsg_gps_quality", i_buffer_size);
     rospub_matching_score_                = nh.advertise<std_msgs::String>("/laneScore", i_buffer_size);
 
-    strmsg_result_path_ = "/home/soyeong/" + m_str_fileName;
+    strmsg_result_path_ = "~/" + m_str_fileName;
     std::remove(strmsg_result_path_.c_str());
 }
 
@@ -692,7 +692,7 @@ void LandmarkMatchingPF::CallbackImageDetectionLabel(const landmark_matching_loc
 
 void LandmarkMatchingPF::CallBackGlobalPointCloudMap(const sensor_msgs::PointCloud2::ConstPtr &msg)
 {
-    if(kdtree_global_map_!=NULL)
+    if(kdtree_global_map_!=NULL || msg->data.empty())
     {
         return;
     }
@@ -711,7 +711,6 @@ void LandmarkMatchingPF::CallBackGlobalPointCloudMap(const sensor_msgs::PointClo
 void LandmarkMatchingPF::CallBackLocalPointCloudMap(const sensor_msgs::PointCloud2::ConstPtr &msg)
 {
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcptr_point_cloud_input       (new pcl::PointCloud<pcl::PointXYZRGB>);
-    // pcl::PointCloud<pcl::PointXYZRGB>::Ptr pclRandomPointCloudInput (new pcl::PointCloud<pcl::PointXYZRGB>);
 
     pcl::fromROSMsg(*msg, *pcptr_point_cloud_input);
 
@@ -1355,7 +1354,6 @@ void LandmarkMatchingPF::MapMatchingMeasurementUpdate(void)
     pt_search_point.y = egmat_estimated_state_->coeff(0,1);
     pt_search_point.z = d_map_height_;
 
-    // std::vector<int> pointIdxRadiusSearch;
     std::vector<int> vec_point_idx_random_sample;
     std::vector<float> vec_point_radius_squred_distance;
 
@@ -1657,7 +1655,6 @@ void LandmarkMatchingPF::ImageSPCMeasurementUpdate(void)
 
 double LandmarkMatchingPF::ImageContourSPCMatching(std::vector<std::vector<cv::Point>> vec_input_contours, std::vector<cv::Point2d> vec_input_points)
 {
-    // Intersection = (# of intersection points / contour area)*
     if(vec_input_contours.size()==0 || vec_input_points.size() == 0)
     {
         return 0.;
@@ -1699,7 +1696,6 @@ double LandmarkMatchingPF::SegmentedImageSPCMatching(std::vector<cv::Point2d> ve
                 if(CheckNearbyIntersectionPointExist(point, cvvec_ref_bgr, pixel_idx))
                 {
                     i_intersection_points_count =  i_intersection_points_count + (1.0 - pixel_idx*0.05);
-                    // i_intersection_points_count =  i_intersection_points_count + (1.0/(pixel_idx));
                     break;
                 }
             }
@@ -1853,7 +1849,6 @@ void LandmarkMatchingPF::ParticlePointsTransformation(void)
                                  0.,                 0.,                1., 0.,
                                  0.,                 0.,                0., 1.; 
 
-        // ref2parTransformation = egmat_lidar_vehicle_transform_ * ref2parTransformation;
         vec_ref_par_transform_.push_back(ref2parTransformation);
 
         PointCloud2DProjection(pcptr_building_sampled_point_cloud_,       ref2parTransformation, vec_projected_point_building);
