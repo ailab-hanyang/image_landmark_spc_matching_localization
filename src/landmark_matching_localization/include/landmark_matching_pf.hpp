@@ -137,6 +137,7 @@ class LandmarkMatchingPF
         ros::Publisher rospub_estimated_pose_;
         ros::Publisher rospub_particle_pose_array_;
         ros::Publisher rospub_gps_quality_;
+        ros::Publisher rospub_lowcost_gps_quality_;
         ros::Publisher rospub_error_pose_;
         ros::Publisher rospub_particle_marker_array_;
         ros::Publisher rospub_matching_score_;

@@ -67,38 +67,38 @@
             <param name="param_d_tunnel_light_likelihood_threshold_" value="30."/>
             <param name="param_d_tunnel_hydrant_likelihood_threshold_" value="30."/>
             <param name="param_d_building_likelihood_threshold_" value="30.0"/>
-            <param name="param_d_lane_marking_likelihood_threshold_" value="40.0"/>
-            <param name="param_d_fence_likelihood_threshold_" value="35.0"/>
+            <param name="param_d_fence_likelihood_threshold_" value="50.0"/>
+            <param name="param_d_lane_marking_likelihood_threshold_" value="70.0"/>
             
             <!-- POINT CLOUD SAMPLING NUM -->
-            <param name="param_i_num_sampling_building_" value="0"/>
-            <param name="param_i_num_sampling_fence_" value="50"/>
-            <param name="param_i_num_sampling_lane_marking_" value="100"/>
             <param name="param_i_num_sampling_pole_" value="0"/>
             <param name="param_i_num_sampling_traffic_sign_" value="70"/>
             <param name="param_i_num_sampling_traffic_light_" value="70"/>
             <param name="param_i_num_sampling_tunnel_fan_" value="70"/>
             <param name="param_i_num_sampling_tunnel_light_" value="70"/>
             <param name="param_i_num_sampling_tunnel_hydrant_" value="70"/>
+            <param name="param_i_num_sampling_building_" value="0"/>
+            <param name="param_i_num_sampling_fence_" value="50"/>
+            <param name="param_i_num_sampling_lane_marking_" value="100"/>
             
             <!-- CAMERA LiDAR CALIBRATION PARAMETER -->
             <param name="param_d_imu_height_m_" value="1.5"/>
 
                 <!-- rosbag 4 -->
-                <param name="param_d_extrinsic_calibration_roll_deg_" value="-94.0"/>
-                <param name="param_d_extrinsic_calibration_pitch_deg_" value="3.1"/>
-                <param name="param_d_extrinsic_calibration_yaw_deg_" value="-89."/>
-                <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
-                <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
-                <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/>
-
-                <!-- rosbag 2 tunnel -->
-                <!-- <param name="param_d_extrinsic_calibration_roll_deg_" value="-92.0"/>
+                <!-- <param name="param_d_extrinsic_calibration_roll_deg_" value="-94.0"/>
                 <param name="param_d_extrinsic_calibration_pitch_deg_" value="3.1"/>
                 <param name="param_d_extrinsic_calibration_yaw_deg_" value="-89."/>
                 <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
                 <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
                 <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/> -->
+
+                <!-- rosbag 2 tunnel -->
+                <param name="param_d_extrinsic_calibration_roll_deg_" value="-92.0"/>
+                <param name="param_d_extrinsic_calibration_pitch_deg_" value="3.1"/>
+                <param name="param_d_extrinsic_calibration_yaw_deg_" value="-89."/>
+                <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
+                <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
+                <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/>
 
 
         <!-- POINT CLOUD MAP MATHCING -->
@@ -112,9 +112,9 @@
         <param name="param_d_input_vel_sigma_ms_" value="0.5"/>
         <param name="param_d_input_yaw_rate_sigma_degs_" value="0.01"/>
         <param name="param_d_input_acc_sigma_mss_" value="0.1"/>
-        <param name="param_d_east_sigma_m_" value="0.05"/>
-        <param name="param_d_north_sigma_m_" value="0.05"/>
-        <param name="param_d_heading_sigma_deg_" value="0.05"/>
+        <param name="param_d_east_sigma_m_" value="0.08"/>
+        <param name="param_d_north_sigma_m_" value="0.08"/>
+        <param name="param_d_heading_sigma_deg_" value="0.1"/>
         <param name="param_d_gnss_radius_boundary_m_" value="20.0"/>
         <param name="param_d_resampling_coefficent_" value="0.66"/>
         

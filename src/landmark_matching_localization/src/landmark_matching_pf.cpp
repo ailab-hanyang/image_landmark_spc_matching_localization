@@ -67,6 +67,7 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
 
     rospub_particle_pose_array_       = nh.advertise<geometry_msgs::PoseArray>("/particlePoseArray", i_buffer_size);
     rospub_gps_quality_              = nh.advertise<std_msgs::String>("/strmsg_gps_quality", i_buffer_size);
+    rospub_lowcost_gps_quality_              = nh.advertise<std_msgs::String>("/strmsg_lowcost_gps_quality", i_buffer_size);
     rospub_matching_score_                = nh.advertise<std_msgs::String>("/laneScore", i_buffer_size);
 
     strmsg_result_path_ = "~/" + m_str_fileName;
@@ -832,12 +833,9 @@ void LandmarkMatchingPF::CallBackNovatelINSPVAX(const novatel_oem7_msgs::INSPVAX
             break;
     }
 
-    if(param_b_refernce_gps_novatel_)
-    {
-        std_msgs::String strmsg_gps_quality;
-        strmsg_gps_quality.data = "Novatel GPS Quality: " + str_gps_quality;
-        rospub_gps_quality_.publish(strmsg_gps_quality);
-    }
+    std_msgs::String strmsg_gps_quality;
+    strmsg_gps_quality.data = "Novatel GPS Quality: " + str_gps_quality;
+    rospub_gps_quality_.publish(strmsg_gps_quality);
 
     gps_gps_data_.latitude         = msg->latitude;
     gps_gps_data_.longitude        = msg->longitude;
@@ -953,12 +951,9 @@ void LandmarkMatchingPF::CallBackUbloxHNRPVT(const ublox_msgs::HnrPVT::ConstPtr 
             break;
     }
 
-    if(!param_b_refernce_gps_novatel_)
-    {
-        std_msgs::String strmsg_gps_quality;
-        strmsg_gps_quality.data = "Ublox GPS Quality: " + str_gps_quality;
-        rospub_gps_quality_.publish(strmsg_gps_quality);
-    }
+    std_msgs::String strmsg_gps_quality;
+    strmsg_gps_quality.data = "Ublox GPS Quality: " + str_gps_quality;
+    rospub_lowcost_gps_quality_.publish(strmsg_gps_quality);
 
     gps_ublox_data_.latitude  = msg->lat/10000000.0;
     gps_ublox_data_.longitude = msg->lon/10000000.0;
