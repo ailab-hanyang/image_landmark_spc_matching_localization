@@ -50,7 +50,7 @@ rosrun deeplab_ros inference_deeplab.py
 3. Image Detection AI
 ```
 source devel/setup.bash
-rosrun darknet_ros darknet_ros.launch
+roslaunch darknet_ros darknet_ros.launch
 ```
 
 ### Download Semantic Point Cloud Example
