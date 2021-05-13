@@ -72,11 +72,12 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
 
     m_str_fileName = "landmarkMatchingResults.txt";
 
+    // For evaluate system, generating csv file
     // strmsg_result_path_ = "~/" + m_str_fileName;
-    strmsg_result_path_ = "/home/soyeong/landmarkMatchingResults.csv";
-    strmsg_result_gt_path_ = "/home/soyeong/landmarkMatchingGT.csv";
-    std::remove(strmsg_result_path_.c_str());
-    std::remove(strmsg_result_gt_path_.c_str());
+    // strmsg_result_path_ = "~/landmarkMatchingResults.csv";
+    // strmsg_result_gt_path_ = "~/landmarkMatchingGT.csv";
+    // std::remove(strmsg_result_path_.c_str());
+    // std::remove(strmsg_result_gt_path_.c_str());
 }
 
 LandmarkMatchingPF::~LandmarkMatchingPF()
