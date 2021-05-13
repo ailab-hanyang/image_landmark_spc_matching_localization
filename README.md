@@ -64,3 +64,15 @@ Put this file at src/landmark_matching_localization/map.
 You can download weights example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EVMou4zEG-dOt5KNdtkBj3MBBucZqrhVZxit-auWfwoGmQ?e=4R8Nsm .
 
 Put this file at src/darknet_ros/darknet_ros/yolo_network_config/weights.
+
+### Download ROSBAG Example
+
+You can download rosbag example file at
+
+#### Tunnel Version : https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EcRktnkEg2NKtUdIOgrobsgBDoFPSP3hMAUaffJ6Vo_0Mg?e=LVdhhQ
+#### Downtown Version : https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EWBhJB657SVEoqeyHpNLsZwBb7roT505lA1wo2m6qDQAwQ?e=3JV7Cf
+
+```
+rosbag play 15_ccw_in_d_c_2.bag
+rosbag play 15_ccw_in_d_c_4.bag
+```
