@@ -160,6 +160,7 @@ class LandmarkMatchingPF
         geometry_msgs::PoseStamped psstp_gnss_enu_pose_;
 
         std::string strmsg_result_path_;
+        std::string strmsg_result_gt_path_;
         std::string m_str_fileName;
 
         double array_ego_vehicle_pose_[3];
@@ -449,8 +450,11 @@ class LandmarkMatchingPF
 
     // ETC
         geometry_msgs::PoseStamped ConvertToMapFrame(float f_lat, float f_lon, float f_hgt);
+        geometry_msgs::PoseStamped ConvertToLLHFrame(float e_m, float n_m, float u_m);
         double GaussianRandomGenerator(double d_mean, double d_sigma);
         void SaveResultText(Eigen::MatrixXd* input, std::string mathcingType);
+        void SaveErrorText(double x, double y);
+        void SaveResultForEvaluationToolText(geometry_msgs::PoseStamped estPose);
         void PublishParticlePoseArray(void);      
 };
 #endif

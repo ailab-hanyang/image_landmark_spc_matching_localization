@@ -58,16 +58,16 @@
 
             <param name="param_d_building_min_x_roi_m_" value="5.0"/>
             <param name="param_d_building_max_x_roi_m_" value="30.0"/>
-            <param name="param_d_building_min_y_roi_m_" value="-10.0"/>
-            <param name="param_d_building_max_y_roi_m_" value="10.0"/>
+            <param name="param_d_building_min_y_roi_m_" value="-13.0"/>
+            <param name="param_d_building_max_y_roi_m_" value="13.0"/>
 
             <param name="param_d_fence_min_x_roi_m_" value="5.0"/>
             <param name="param_d_fence_max_x_roi_m_" value="15.0"/>
-            <param name="param_d_fence_min_y_roi_m_" value="-8.0"/>
-            <param name="param_d_fence_max_y_roi_m_" value="8.0"/>
+            <param name="param_d_fence_min_y_roi_m_" value="-10.0"/>
+            <param name="param_d_fence_max_y_roi_m_" value="10.0"/>
 
             <param name="param_d_tunnel_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_tunnel_max_x_roi_m_" value="20.0"/>
+            <param name="param_d_tunnel_max_x_roi_m_" value="40.0"/>
             <param name="param_d_tunnel_min_y_roi_m_" value="-4.0"/>
             <param name="param_d_tunnel_max_y_roi_m_" value="4.0"/>
 
@@ -77,9 +77,9 @@
             <param name="param_d_traffic_max_y_roi_m_" value="9.0"/>
 
             <param name="param_d_pole_min_x_roi_m_" value="5.0"/>
-            <param name="param_d_pole_max_x_roi_m_" value="15.0"/>
-            <param name="param_d_pole_min_y_roi_m_" value="-10.0"/>
-            <param name="param_d_pole_max_y_roi_m_" value="10.0"/>
+            <param name="param_d_pole_max_x_roi_m_" value="20.0"/>
+            <param name="param_d_pole_min_y_roi_m_" value="-15.0"/>
+            <param name="param_d_pole_max_y_roi_m_" value="15.0"/>
             
             <!-- POINT CLOUD SAMPLING NUM -->
             <param name="param_i_num_sampling_building_" value="10"/>
@@ -96,20 +96,20 @@
             <param name="param_d_imu_height_m_" value="1.5"/>
 
                 <!-- rosbag 4 -->
-                <param name="param_d_extrinsic_calibration_roll_deg_" value="-94.0"/>
-                <param name="param_d_extrinsic_calibration_pitch_deg_" value="3.1"/>
-                <param name="param_d_extrinsic_calibration_yaw_deg_" value="-89."/>
-                <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
-                <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
-                <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/>
-
-                <!-- rosbag 2 tunnel -->
-                <!-- <param name="param_d_extrinsic_calibration_roll_deg_" value="-92.0"/>
+                <!-- <param name="param_d_extrinsic_calibration_roll_deg_" value="-94.0"/>
                 <param name="param_d_extrinsic_calibration_pitch_deg_" value="3.1"/>
                 <param name="param_d_extrinsic_calibration_yaw_deg_" value="-89."/>
                 <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
                 <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
                 <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/> -->
+
+                <!-- rosbag 2 tunnel -->
+                <param name="param_d_extrinsic_calibration_roll_deg_" value="-92.0"/>
+                <param name="param_d_extrinsic_calibration_pitch_deg_" value="3.1"/>
+                <param name="param_d_extrinsic_calibration_yaw_deg_" value="-89."/>
+                <param name="param_d_extrinsic_calibration_x_m_" value="-0.2"/>
+                <param name="param_d_extrinsic_calibration_y_m_" value="0.0"/>
+                <param name="param_d_extrinsic_calibration_z_m_" value="-0.0"/>
 
 
         <!-- POINT CLOUD MAP MATHCING -->

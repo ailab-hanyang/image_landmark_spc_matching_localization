@@ -70,8 +70,13 @@ pcptr_tunnel_light_sampled_point_cloud_(new pcl::PointCloud<pcl::PointXYZRGB>) ,
     rospub_lowcost_gps_quality_              = nh.advertise<std_msgs::String>("/strmsg_lowcost_gps_quality", i_buffer_size);
     rospub_matching_score_                = nh.advertise<std_msgs::String>("/laneScore", i_buffer_size);
 
-    strmsg_result_path_ = "~/" + m_str_fileName;
+    m_str_fileName = "landmarkMatchingResults.txt";
+
+    // strmsg_result_path_ = "~/" + m_str_fileName;
+    strmsg_result_path_ = "/home/soyeong/landmarkMatchingResults.csv";
+    strmsg_result_gt_path_ = "/home/soyeong/landmarkMatchingGT.csv";
     std::remove(strmsg_result_path_.c_str());
+    std::remove(strmsg_result_gt_path_.c_str());
 }
 
 LandmarkMatchingPF::~LandmarkMatchingPF()
@@ -82,8 +87,6 @@ void LandmarkMatchingPF::GetParameter()
 {
     ros::NodeHandle nh;
 
-    nh.getParam("/landmark_matching_pf/m_str_fileName"  , m_str_fileName);
-    
     nh.getParam("/landmark_matching_pf/param_b_localization_type_point_cloud_map_matching_"  , param_b_localization_type_point_cloud_map_matching_);
     nh.getParam("/landmark_matching_pf/param_b_localization_type_spc_image_matching_"       , param_b_localization_type_spc_image_matching_);
     nh.getParam("/landmark_matching_pf/param_b_localization_type_gps_"         , param_b_localization_type_gps_);
@@ -359,6 +362,11 @@ void LandmarkMatchingPF::Run(){
     errorPose.position.x = psstp_estimated_pose.pose.position.x - psstp_novatel_enu_pose.pose.position.x;
     errorPose.position.y = psstp_estimated_pose.pose.position.y - psstp_novatel_enu_pose.pose.position.y;
     rospub_error_pose_.publish(errorPose);
+    
+    geometry_msgs::PoseStamped psstp_est_llh_pose;
+    psstp_est_llh_pose = ConvertToLLHFrame(psstp_estimated_pose.pose.position.x, psstp_estimated_pose.pose.position.y, psstp_estimated_pose.pose.position.z);
+
+    SaveResultForEvaluationToolText(psstp_est_llh_pose);
 }
 
 
@@ -1314,31 +1322,6 @@ void LandmarkMatchingPF::GPSMeasurementUpdate(void)
 
     double d_tmp_east_m = psstp_tmp_gps_enu.pose.position.x;
     double d_tmp_north_m = psstp_tmp_gps_enu.pose.position.y;
-
-    for(int idx_particle = 0; idx_particle < param_i_num_particle; idx_particle++)
-    {
-        double d_particle_east_m = egmat_timestamped_particle_state_->coeff(idx_particle, 0);
-        double d_particle_north_m = egmat_timestamped_particle_state_->coeff(idx_particle, 1);
-
-        double d_tmp_diff_distance_m = sqrt(pow((d_tmp_east_m - d_particle_east_m),2)+pow((d_tmp_north_m - d_particle_north_m),2));
-        if(d_tmp_diff_distance_m <= param_d_gnss_radius_boundary_m_)
-        {
-            (*egmat_gps_particle_likelihood_)(idx_particle, 0) = 1.;
-        }
-        else
-        {
-            (*egmat_gps_particle_likelihood_)(idx_particle, 0) = 0.;
-        }
-    }
-    if(!NormalizationWeight(egmat_gps_particle_likelihood_))
-    {
-        ROS_ERROR_STREAM("Weight normalization error !!!!");
-    }
-    else
-    {
-        WeightUpdate(egmat_gps_particle_likelihood_);
-    }
-    
 }
 
 // 4-2. POINT CLOUD MAP MATCHING BASED UPDATE
@@ -1407,7 +1390,7 @@ void LandmarkMatchingPF::MapMatchingMeasurementUpdate(void)
             (*egmat_map_matching_particle_likelihood_)(idx_particle,0) += d_likelihood;
         }
     }
-    SaveResultText(egmat_map_matching_particle_likelihood_, "MapMatching");
+    // SaveResultText(egmat_map_matching_particle_likelihood_, "MapMatching");
 
     if(NormalizationWeight(egmat_map_matching_particle_likelihood_))
     {
@@ -1424,7 +1407,7 @@ void LandmarkMatchingPF::ImageSPCMeasurementUpdate(void)
         double d_likelihood_traffic_sign   = ImageContourSPCMatching(vec_image_contour_point_traffic_sign_, vec_particle_based_projected_points_traffic_sign_[idx_particle]);
         double d_likelihood_traffic_light  = ImageContourSPCMatching(vec_image_contour_point_traffic_light_, vec_particle_based_projected_points_traffic_light_[idx_particle]);
         double d_likelihood_tunnel_fan     = ImageContourSPCMatching(vec_image_contour_point_tunnel_fan_, vec_particle_based_projected_points_tunnel_fan_[idx_particle]);
-        double dLikelihoodTunnelLight   = ImageContourSPCMatching(vec_image_contour_point_tunnel_light_, vec_particle_based_projected_points_tunnel_light_[idx_particle]);
+        double d_likelihoodTunnelLight   = ImageContourSPCMatching(vec_image_contour_point_tunnel_light_, vec_particle_based_projected_points_tunnel_light_[idx_particle]);
         double d_likelihood_tunnel_hydrant = ImageContourSPCMatching(vec_image_contour_point_tunnel_hydrant, vec_particle_based_projected_points_tunnel_hydrant_[idx_particle]);
         
         double d_likelihood_building      = SegmentedImageSPCMatching(vec_particle_based_projected_points_building_[idx_particle],    cvvec_lane_semantic_rgb_, 1);
@@ -1435,7 +1418,7 @@ void LandmarkMatchingPF::ImageSPCMeasurementUpdate(void)
         (*egmat_traffic_sign_particle_likelihood_)(idx_particle,0)   = d_likelihood_traffic_sign;
         (*egmat_traffic_light_particle_likelihood_)(idx_particle,0)  = d_likelihood_traffic_light;
         (*egmat_tunnel_fan_particle_likeilhood_)(idx_particle,0)     = d_likelihood_tunnel_fan;
-        (*egmat_tunnel_light_particle_likelihood_)(idx_particle,0)   = dLikelihoodTunnelLight;
+        (*egmat_tunnel_light_particle_likelihood_)(idx_particle,0)   = d_likelihoodTunnelLight;
         (*egmat_tunnel_hydrant_particle_likelihood_)(idx_particle,0) = d_likelihood_tunnel_hydrant;
 
         (*egmat_building_particle_likelihood_)(idx_particle,0)      = d_likelihood_building;
@@ -1610,7 +1593,7 @@ void LandmarkMatchingPF::ImageSPCMeasurementUpdate(void)
 
             *egmat_lane_marking_particle_likelihood_ = egmat_min_subtracted_likelihood;
         }
-        SaveResultText(egmat_lane_marking_particle_likelihood_, "Lane Matching");
+        // SaveResultText(egmat_lane_marking_particle_likelihood_, "Lane Matching");
 
         if(NormalizationWeight(egmat_lane_marking_particle_likelihood_))
         {
@@ -2085,6 +2068,7 @@ void LandmarkMatchingPF::ReferenceSegmentedImagePointAndCheckInsideViewer()
                                         1.5);
     }
 
+    cv::resize(cvmat_image_origin, cvmat_image_origin, cv::Size(960,540));
     cv::imshow("Ref Segmented Point Cloud Image", cvmat_image_origin);
     cv::waitKey(1);
 }
@@ -2127,7 +2111,7 @@ void LandmarkMatchingPF::ReferenceImagePointAndCheckInsideViewer()
                                     3);
     }
 
-    std::string str_pole           = "Pole Score : "           + std::to_string(d_likelihood_pole);
+    std::string str_pole          = "Pole Score : "           + std::to_string(d_likelihood_pole);
     std::string str_traffic_sign   = "Traffic Sign Score : "   + std::to_string(d_likelihood_traffic_sign);
     std::string str_traffic_light  = "Traffic light Score : "  + std::to_string(d_likelihood_traffic_light);
     std::string str_tunnel_fan     = "Tunnel Fan Score : "     + std::to_string(d_likelihood_tunnel_fan);
@@ -2141,7 +2125,7 @@ void LandmarkMatchingPF::ReferenceImagePointAndCheckInsideViewer()
     cv::putText(cvmat_image_projection, str_tunnel_light,   cv::Point(40, cvmat_image_projection.rows-113), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(0,0,255),   2);
     cv::putText(cvmat_image_projection, str_tunnel_hydrant, cv::Point(40, cvmat_image_projection.rows-138), cv::FONT_HERSHEY_DUPLEX, 1.0, CV_RGB(255,0,255), 2);
 
-    if(vec_image_contour_point_pole_.size() != 0) // pole
+    if(vec_image_contour_point_pole_.size() != 0) //str_pole
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_pole_, -1, CV_RGB(0,255,0),   2, 8);
     if(vec_image_contour_point_traffic_sign_.size() != 0) // traffic sign
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_traffic_sign_, -1, CV_RGB(255,255,0), 2, 8);
@@ -2154,6 +2138,7 @@ void LandmarkMatchingPF::ReferenceImagePointAndCheckInsideViewer()
     if(vec_image_contour_point_tunnel_hydrant.size() != 0) // tunnel hydrant
         cv::drawContours(cvmat_image_projection, vec_image_contour_point_tunnel_hydrant, -1, CV_RGB(255,0,255), 2, 8);
 
+    cv::resize(cvmat_image_projection, cvmat_image_projection, cv::Size(960,540));
     cv::imshow("Ref Image", cvmat_image_projection);
     cv::waitKey(1);
 }
@@ -2173,7 +2158,7 @@ void LandmarkMatchingPF::ParticleImagePointViewer(std::vector<cv::Point2d> vec_i
     double d_likelihood_traffic_sign   = ImageSPCMatchingVisualization(vec_image_contour_point_traffic_sign_, vec_particle_based_projected_points_traffic_sign_[i_particle_num]);
     double d_likelihood_traffic_light  = ImageSPCMatchingVisualization(vec_image_contour_point_traffic_light_, vec_particle_based_projected_points_traffic_light_[i_particle_num]);
     double d_likelihood_tunnel_fan     = ImageSPCMatchingVisualization(vec_image_contour_point_tunnel_fan_, vec_particle_based_projected_points_tunnel_fan_[i_particle_num]);
-    double dLikelihoodTunnelLight   = ImageSPCMatchingVisualization(vec_image_contour_point_tunnel_light_, vec_particle_based_projected_points_tunnel_light_[i_particle_num]);
+    double d_likelihoodTunnelLight   = ImageSPCMatchingVisualization(vec_image_contour_point_tunnel_light_, vec_particle_based_projected_points_tunnel_light_[i_particle_num]);
     double d_likelihood_tunnel_hydrant = ImageSPCMatchingVisualization(vec_image_contour_point_tunnel_hydrant, vec_particle_based_projected_points_tunnel_hydrant_[i_particle_num]);
 
     cv::Mat cvmat_image_origin  = cvptr_input_image_->image;
@@ -2206,7 +2191,7 @@ void LandmarkMatchingPF::ParticleImagePointViewer(std::vector<cv::Point2d> vec_i
     std::string str_traffic_sign   = "Traffic Sign Score : "   + std::to_string(d_likelihood_traffic_sign);
     std::string str_traffic_light  = "Traffic light Score : "  + std::to_string(d_likelihood_traffic_light);
     std::string str_tunnel_fan     = "Tunnel Fan Score : "     + std::to_string(d_likelihood_tunnel_fan);
-    std::string str_tunnel_light   = "Tunnel Light Score : "   + std::to_string(dLikelihoodTunnelLight);
+    std::string str_tunnel_light   = "Tunnel Light Score : "   + std::to_string(d_likelihoodTunnelLight);
     std::string str_tunnel_hydrant = "Tunnel Hydrant Score : " + std::to_string(d_likelihood_tunnel_hydrant);
 
     std::string particleNum   = "Particle Num : "+std::to_string(i_particle_num);
@@ -2348,6 +2333,42 @@ geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToMapFrame(float f_lat, fl
     return(psstp_pose);
 }
 
+geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToLLHFrame(float e_m, float n_m, float u_m)
+{
+    double d_kappa_lat = 0.;
+    double d_kappa_lon = 0.;  
+
+    double d_ref_latitude_deg = 37.3962732790;
+    double d_ref_longitude_deg = 127.1066872418;
+
+    u_m = d_map_height_;
+
+    double d_denominator = sqrt(1. - D_GEOD_E2 * pow(sin(d_ref_latitude_deg * D_DEG_2_RAD), 2));
+	double dM = D_GEOD_A * (1. - D_GEOD_E2) / pow(d_denominator, 3);
+
+	// Curvature for the meridian
+	d_kappa_lat = 1. / (dM + u_m) * D_RAD_2_DEG;
+
+	// estimate the normal radius
+	d_denominator = sqrt(1. - D_GEOD_E2 * pow(sin(d_ref_latitude_deg * D_DEG_2_RAD), 2));
+	double d_dn = D_GEOD_A / d_denominator;
+
+	// Curvature for the meridian
+	d_kappa_lon = 1. / ((d_dn + u_m) * cos(d_ref_latitude_deg * D_DEG_2_RAD)) * D_RAD_2_DEG;
+
+    geometry_msgs::PoseStamped psstp_pose;
+    geometry_msgs::Quaternion gquat_quaternion;
+
+    psstp_pose.header.stamp = ros::Time::now();
+    psstp_pose.header.frame_id = "map";
+
+    psstp_pose.pose.position.x = d_ref_longitude_deg + d_kappa_lon*e_m;
+    psstp_pose.pose.position.y = d_ref_latitude_deg + d_kappa_lat*n_m;
+    psstp_pose.pose.position.z = u_m;
+
+    return(psstp_pose);
+}
+
 double LandmarkMatchingPF::GaussianRandomGenerator(double d_mean, double d_sigma)
 {
 	if (d_sigma > FLT_MIN)
@@ -2377,6 +2398,29 @@ void LandmarkMatchingPF::SaveResultText(Eigen::MatrixXd* input, std::string math
                     << ", "<<std::to_string(gps_gps_data_.yaw) << ", "<< std::to_string(input->coeff(idxPar, 0))<<"\n";
     }
         
+    i_frame_count++;
+}
+
+void LandmarkMatchingPF::SaveErrorText(double x, double y)
+{
+    std::ofstream resultText(strmsg_result_path_, std::ofstream::out | std::ofstream::app);
+    resultText  <<std::to_string(x)<< ", "<< std::to_string(y) << "\n";
+}
+
+void LandmarkMatchingPF::SaveResultForEvaluationToolText(geometry_msgs::PoseStamped estPose)
+{
+    std::ofstream resultText(strmsg_result_path_, std::ofstream::out | std::ofstream::app);
+
+    resultText  <<0<< ", "<< 0 << ", "<< std::to_string(i_frame_count)<< ", "<< std::to_string(estPose.pose.position.x) <<", "<< std::to_string(estPose.pose.position.y) << ", " << 0 
+    << ", "<< std::to_string(egmat_estimated_state_->coeff(0, 2))<<", "<< std::to_string(egmat_estimated_sigma_->coeff(0, 0)) << ", "<< std::to_string(egmat_estimated_sigma_->coeff(0, 1)) << ", "<< 0 << ", "
+    << std::to_string(egmat_estimated_sigma_->coeff(0, 2)) << ", "<< std::to_string(gps_gps_data_.quality)<<"\n";
+
+    std::ofstream resultGtText(strmsg_result_gt_path_, std::ofstream::out | std::ofstream::app);
+
+    resultGtText  <<0<< ", "<< 0 << ", "<< std::to_string(i_frame_count)<< ", "<< std::to_string(gps_gps_data_.latitude) <<", "<< std::to_string(gps_gps_data_.longitude) << ", " << 0 
+    << ", "<< std::to_string(gps_gps_data_.yaw)<<", "<< 0 << ", "<< 0 << ", "<< 0 << ", "
+    << 0 << ", "<< std::to_string(gps_gps_data_.quality)<<"\n";
+
     i_frame_count++;
 }
 
