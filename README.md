@@ -24,12 +24,12 @@ Additionaly, it also requires the following libraries.
  - Python (recommand version 3.5, 3.7)
 
 ```
-pip3 install catkin_pkg
 sudo apt-get update
 sudo apt-get install ros-melodic-ublox
 sudo apt-get install ros-melodic-novatel-oem7-driver
 sudo apt-get install ros-melodic-grid-map
 pip3 install empy
+pip3 install catkin_pkg
 ```
 ---------------------------------------------------------------------
 ### Run the demo
