@@ -63,22 +63,20 @@ roslaunch darknet_ros darknet_ros.launch
 
 ### Download Semantic Point Cloud Example
 
-You can download semantic point cloud map example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EWD-5vFFooNNjlrsSBbDGqgB6qHSD786wffZwWa2C8zB_A?e=0vTyMh. 
-
+You can download semantic point cloud map example file at http://gofile.me/5s2Yk/uN3afXdtD
 Put this file at src/landmark_matching_localization/map.
 
 ### Download Yolo Weights Example
 
-You can download weights example file at https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EVMou4zEG-dOt5KNdtkBj3MBBucZqrhVZxit-auWfwoGmQ?e=4R8Nsm .
-
+You can download weights example file at http://gofile.me/5s2Yk/orOrQn5ND
 Put this file at src/darknet_ros/darknet_ros/yolo_network_config/weights.
 
 ### Download ROSBAG Example
 
 You can download rosbag example file at
 
-#### Tunnel Version : https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EcRktnkEg2NKtUdIOgrobsgBDoFPSP3hMAUaffJ6Vo_0Mg?e=LVdhhQ
-#### Downtown Version : https://konkukackr-my.sharepoint.com/:u:/g/personal/ailab_konkuk_ac_kr/EWBhJB657SVEoqeyHpNLsZwBb7roT505lA1wo2m6qDQAwQ?e=3JV7Cf
+#### Tunnel Version : http://gofile.me/5s2Yk/pQCSIBYwK
+#### Downtown Version : http://gofile.me/5s2Yk/5S2GyFTkm
 
 ```
 rosbag play 15_ccw_in_d_c_2.bag
