@@ -64,11 +64,13 @@ roslaunch darknet_ros darknet_ros.launch
 ### Download Semantic Point Cloud Example
 
 You can download semantic point cloud map example file at http://gofile.me/5s2Yk/uN3afXdtD
+
 Put this file at src/landmark_matching_localization/map.
 
 ### Download Yolo Weights Example
 
 You can download weights example file at http://gofile.me/5s2Yk/orOrQn5ND
+
 Put this file at src/darknet_ros/darknet_ros/yolo_network_config/weights.
 
 ### Download ROSBAG Example
