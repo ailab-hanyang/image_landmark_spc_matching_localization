@@ -1,5 +1,7 @@
 # Image Landmark and Semantic Point Cloud Map Matching based Localization
 
+<img src="./holistic_matching/66_spc_holistic_matching.gif" width="500">
+
 ---------------------------------------------------------------------
 
 ### Dependencies
