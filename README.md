@@ -22,7 +22,7 @@ pip3 install catkin_pkg
 ---------------------------------------------------------------------
 ### Package Install
 ```
-git clone https://github.com/soyeongkim/image_landmark_spc_matching_localization.git
+https://github.com/ailab-konkuk/image_landmark_spc_matching_localization.git
 cd image_landmark_spc_matching_localization
 catkin_make --cmake-args \
             -DCMAKE_BUILD_TYPE=Release \
