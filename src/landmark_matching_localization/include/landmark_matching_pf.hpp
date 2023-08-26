@@ -449,8 +449,8 @@ class LandmarkMatchingPF
         double SegmentedImageSPCMatchingVisualization(std::vector<cv::Point2d> vec_input_points, cv::Vec3b cvvec_ref_bgr, int i_pixel_bias);
 
     // ETC
-        geometry_msgs::PoseStamped ConvertToMapFrame(float f_lat, float f_lon, float f_hgt);
-        geometry_msgs::PoseStamped ConvertToLLHFrame(float e_m, float n_m, float u_m);
+        geometry_msgs::PoseStamped ConvertToMapFrame(double f_lat, double f_lon, double f_hgt);
+        geometry_msgs::PoseStamped ConvertToLLHFrame(double e_m, double n_m, double u_m);
         double GaussianRandomGenerator(double d_mean, double d_sigma);
         void SaveResultText(Eigen::MatrixXd* input, std::string mathcingType);
         void SaveErrorText(double x, double y);

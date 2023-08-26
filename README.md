@@ -33,6 +33,11 @@ catkin_make --cmake-args \
             -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so
 source devel/setup.bash
 ```
+#### * If you want to use only point cloud map matching localization, build only 'landmark_matching_localization'
+```
+catkin_make -DCMAKE_BUILD_TYPE=Release -DCATKIN_BLACKLIST_PACKAGES='darknet_ros;deeplab_ros'
+```
+
 ---------------------------------------------------------------------
 ### Run the demo
 #### 1. GPS based Localization

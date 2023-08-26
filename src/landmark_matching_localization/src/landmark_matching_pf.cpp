@@ -2298,7 +2298,7 @@ double LandmarkMatchingPF::SegmentedImageSPCMatchingVisualization(std::vector<cv
 }
 
 // ETC
-geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToMapFrame(float f_lat, float f_lon, float f_hgt)
+geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToMapFrame(double f_lat, double f_lon, double f_hgt)
 {
     double d_kappa_lat = 0.;
     double d_kappa_lon = 0.;  
@@ -2334,7 +2334,7 @@ geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToMapFrame(float f_lat, fl
     return(psstp_pose);
 }
 
-geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToLLHFrame(float e_m, float n_m, float u_m)
+geometry_msgs::PoseStamped LandmarkMatchingPF::ConvertToLLHFrame(double e_m, double n_m, double u_m)
 {
     double d_kappa_lat = 0.;
     double d_kappa_lon = 0.;  
